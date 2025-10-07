@@ -33,7 +33,7 @@ const puppeteer = require('puppeteer');
       await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
       // If panels lazy-load, you can add waits or interactions here
-      await page.waitForTimeout(2500);
+  await new Promise(resolve => setTimeout(resolve, 2500));
 
       const outPath = path.join(outDir, t.filename);
       await page.screenshot({ path: outPath, fullPage: false });
