@@ -11,8 +11,13 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 
 (async () => {
-  const outDir = path.join(process.cwd(), 'public', 'screenshots');
-  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = path.join(process.cwd(), 'screenshots');
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+...
+const outPath = path.join(outDir, t.filename);
+await page.screenshot({ path: outPath, fullPage: false });
+
+
 
   // Replace with the public Grafana dashboard / panel URLs you want to capture.
   // You can screenshot the full public dashboard page, or use panel-specific URLs (d-solo/...&panelId=...).
