@@ -1,8 +1,6 @@
 {
   "name": "grafana-screenshots",
   "version": "1.0.0",
-  "description": "Take screenshots of public Grafana dashboard panels for Cloudflare Pages",
-  "main": "screenshot.js",
   "scripts": {
     "screenshot": "node screenshot.js"
   },

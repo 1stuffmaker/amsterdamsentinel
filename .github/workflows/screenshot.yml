@@ -1,0 +1,65 @@
+name: Grafana screenshots
+
+on:
+  schedule:
+    # runs every 15 minutes (cron uses UTC). Adjust as needed.
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {} # allow manual run from Actions tab
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run screenshots
+        run: npm run screenshot
+        env:
+          CI: true
+
+      - name: Commit & push screenshots (safe rebase)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage screenshots (adjust path if your script writes to a different dir)
+          git add -A screenshots || true
+
+          # If there is nothing to commit, exit cleanly
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Automated: update Grafana screenshots"
+
+          # Fetch latest remote main to avoid push conflicts
+          git fetch origin main --depth=1
+
+          # Try rebase first
+          if git rebase origin/main; then
+            echo "Rebased successfully"
+          else
+            echo "Rebase failed — attempting merge fallback"
+            git rebase --abort || true
+            # Perform a merge to combine histories
+            git merge --no-edit origin/main || true
+          fi
+
+          # Push result back to main
+          git push origin HEAD:main
