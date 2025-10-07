@@ -90,14 +90,20 @@
         </div>
 
 ```
-    <!-- Grafana embed: replace YOUR_GRAFANA_URL with your public Grafana dashboard URL -->
-    <iframe class="dashboard" src="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" referrerpolicy="no-referrer"></iframe>
+    <!-- Replace your iframe with this block -->
+<div style="text-align:center;margin:2rem 0">
+  <a
+    href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230"
+    target="_blank" rel="noopener noreferrer"
+    style="display:inline-block;padding:14px 20px;border-radius:12px;background:#58a6ff;color:#021018;
+           font-weight:700;text-decoration:none;box-shadow:0 10px 30px rgba(88,166,255,0.15);">
+    Open Live Dashboard (Grafana Cloud)
+  </a>
+  <p style="color:#9aa6b2;margin-top:.6rem;font-size:.95rem">
+    Grafana Cloud prevents inline embedding for security — the dashboard will open in a new tab.
+  </p>
+</div>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px">
-      <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank" rel="noopener">Open in Grafana</a>
-      <div class="small">Last updated: <span id="lastUpdated">—</span></div>
-    </div>
-  </div>
 
   <!-- Sidebar -->
   <aside class="card">
