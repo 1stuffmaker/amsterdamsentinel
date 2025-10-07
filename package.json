@@ -1,0 +1,10 @@
+{
+  "name": "grafana-screenshots",
+  "version": "1.0.0",
+  "scripts": {
+    "screenshot": "node screenshot.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.3.8"
+  }
+}
