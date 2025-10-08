@@ -38,10 +38,25 @@ const puppeteer = require('puppeteer');
       await new Promise(resolve => setTimeout(resolve, 5000));
 
 
-      // Screenshot alleen het dashboard-gedeelte
-      const dashboard = await page.$('.dashboard-container, .react-grid-layout, main');
+      // Screenshot van dashboard plus footer
+      const dashboard = await page.$('.css-efhoa4-body');
+      const footer = await page.$('[data-testid="public-dashboard-footer"]');
       const outPath = path.join(outDir, t.filename);
-      if (dashboard) {
+      if (dashboard && footer) {
+        // Bepaal bounding box van dashboard en footer
+        const dbBox = await dashboard.boundingBox();
+        const ftBox = await footer.boundingBox();
+        if (dbBox && ftBox) {
+          // Combineer beide boxen tot één screenshot
+          const x = Math.min(dbBox.x, ftBox.x);
+          const y = dbBox.y;
+          const width = Math.max(dbBox.width, ftBox.width);
+          const height = (ftBox.y + ftBox.height) - dbBox.y;
+          await page.screenshot({ path: outPath, clip: { x, y, width, height } });
+        } else {
+          await dashboard.screenshot({ path: outPath });
+        }
+      } else if (dashboard) {
         await dashboard.screenshot({ path: outPath });
       } else {
         // fallback: hele pagina
