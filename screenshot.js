@@ -36,7 +36,7 @@ const puppeteer = require('puppeteer');
   await new Promise(resolve => setTimeout(resolve, 2500));
 
       const outPath = path.join(outDir, t.filename);
-      await page.screenshot({ path: outPath, fullPage: false });
+  await page.screenshot({ path: outPath, fullPage: true });
       console.log('Saved:', outPath);
 
       await page.close();
