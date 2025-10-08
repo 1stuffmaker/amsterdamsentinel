@@ -33,8 +33,9 @@ const puppeteer = require('puppeteer');
       await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
 
-      // If panels lazy-load, you can add waits or interactions here
-      await new Promise(resolve => setTimeout(resolve, 2500));
+
+      // Wacht langer zodat alles geladen is
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
       // Verberg de Grafana footer
       await page.evaluate(() => {
@@ -42,8 +43,15 @@ const puppeteer = require('puppeteer');
         if (footer) footer.style.display = 'none';
       });
 
+      // Screenshot alleen het dashboard-gedeelte
+      const dashboard = await page.$('.dashboard-container, .react-grid-layout, main');
       const outPath = path.join(outDir, t.filename);
-      await page.screenshot({ path: outPath, fullPage: true });
+      if (dashboard) {
+        await dashboard.screenshot({ path: outPath });
+      } else {
+        // fallback: hele pagina
+        await page.screenshot({ path: outPath, fullPage: true });
+      }
       console.log('Saved:', outPath);
 
       await page.close();
