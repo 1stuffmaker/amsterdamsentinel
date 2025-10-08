@@ -26,7 +26,7 @@ const puppeteer = require('puppeteer');
   try {
     for (const t of targets) {
       const page = await browser.newPage();
-      await page.setViewport(t.viewport || { width: 1200, height: 800 });
+  await page.setViewport({ width: 1920, height: 2000 });
       await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36');
 
       console.log('Loading', t.url);
@@ -37,21 +37,9 @@ const puppeteer = require('puppeteer');
       // Wacht langer zodat alles geladen is
       await new Promise(resolve => setTimeout(resolve, 5000));
 
-      // Verberg de Grafana footer
-      await page.evaluate(() => {
-        const footer = document.querySelector('footer, .footer, .gf-footer');
-        if (footer) footer.style.display = 'none';
-      });
-
-      // Screenshot alleen het dashboard-gedeelte
-      const dashboard = await page.$('.dashboard-container, .react-grid-layout, main');
+      // Maak een screenshot van de volledige pagina, footer blijft zichtbaar
       const outPath = path.join(outDir, t.filename);
-      if (dashboard) {
-        await dashboard.screenshot({ path: outPath });
-      } else {
-        // fallback: hele pagina
-        await page.screenshot({ path: outPath, fullPage: true });
-      }
+      await page.screenshot({ path: outPath, fullPage: true });
       console.log('Saved:', outPath);
 
       await page.close();
