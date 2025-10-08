@@ -4,7 +4,7 @@ on:
   schedule:
     # runs every 15 minutes (cron uses UTC). Adjust as needed.
     - cron: '*/15 * * * *'
-  workflow_dispatch: {} # allow manual run from Actions tab
+  workflow_dispatch:
 
 jobs:
   capture:
@@ -29,7 +29,7 @@ jobs:
         env:
           CI: true
 
-  - name: Commit & force push screenshots
+      - name: Commit & force push screenshots
         shell: bash
         run: |
           set -euo pipefail
@@ -46,5 +46,4 @@ jobs:
 
           git commit -m "Automated: update Grafana screenshots"
 
-          # Force push, geen rebase/merge
           git push origin HEAD:main --force
