@@ -144,15 +144,12 @@
   /* value proposition */
   .value-prop{margin:70px 0 50px;position:relative;z-index:3}
   .vp-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-  .vp-visual{position:relative;min-height:320px;border-radius:28px;background:radial-gradient(circle at 30% 30%,#0e2738,#071621 60%,#06111a);overflow:hidden;border:1px solid rgba(255,255,255,0.05);box-shadow:0 20px 60px -30px #01070c,0 0 0 1px rgba(255,255,255,0.02) inset}
-  .orb{position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(30px);opacity:.55;animation: float 14s ease-in-out infinite}
-  .orb-a{top:-30px;left:-40px;background:linear-gradient(135deg,#58a6ff,#2dd4bf)}
-  .orb-b{bottom:-60px;right:-40px;background:linear-gradient(135deg,#2dd4bf,#58a6ff);animation-duration:18s}
-  .mesh{position:absolute;inset:0;background:
-    repeating-linear-gradient(45deg,rgba(255,255,255,0.08)0 2px,transparent 2px 6px),
-    radial-gradient(circle at 70% 80%,rgba(88,166,255,0.15),transparent 60%);
-    mix-blend-mode:overlay;opacity:.18}
-  @keyframes float{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(40px,30px,0)}}
+  .vp-overview{background:linear-gradient(160deg,#0b1f2b,#091922);padding:30px 32px;border-radius:28px;border:1px solid rgba(255,255,255,0.05);box-shadow:0 18px 50px -24px rgba(0,0,0,0.7);position:relative;overflow:hidden}
+  .overview-badges{display:flex;flex-wrap:wrap;gap:14px}
+  .overview-badges .badge{background:rgba(255,255,255,0.04);padding:12px 16px;border-radius:14px;display:flex;flex-direction:column;min-width:150px;box-shadow:0 6px 18px -10px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.05)}
+  .overview-badges .badge strong{font-size:11px;letter-spacing:1px;font-weight:600;text-transform:uppercase;color:var(--muted)}
+  .overview-badges .badge span{font-size:15px;margin-top:4px}
+  @media (max-width:1100px){.vp-overview{order:1}.vp-copy{order:2}}
   .vp-copy .eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-2);margin:0 0 12px;font-weight:600}
   .vp-copy h2{margin:0 0 18px;font-size:clamp(32px,4.2vw,52px);line-height:1.05;max-width:680px}
   .grad{background:linear-gradient(90deg,#58a6ff,#2dd4bf 60%,#58a6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -221,10 +218,19 @@
     <!-- value proposition section -->
   <section class="value-prop reveal" aria-labelledby="vp-title">
       <div class="vp-grid">
-        <div class="vp-visual" aria-hidden="true">
-          <div class="orb orb-a"></div>
-          <div class="orb orb-b"></div>
-          <div class="mesh"></div>
+        <div class="vp-overview">
+          <h3 style="margin:0 0 18px;font-size:22px">Validator overview</h3>
+          <div class="overview-badges">
+            <div class="badge"><strong>Validator</strong><span>Amsterdam Sentinel</span></div>
+            <div class="badge"><strong>Chain</strong><span>Synternet</span></div>
+            <div class="badge"><strong>Commission</strong><span>0% until 20 Oct</span></div>
+          </div>
+          <p class="muted" style="margin:18px 0 16px;max-width:560px">Transparent performance metrics and uptime. Use the dashboard to verify missed blocks, slashing, peers and resource usage.</p>
+          <h4 style="margin:0 0 10px">Notes</h4>
+          <ul class="muted" style="margin:0 0 10px 18px; padding:0; list-style:disc">
+            <li>Verify validator address before delegating.</li>
+            <li>Contact <a href="https://t.me/AmsterdamSentinel" target="_blank" style="color:var(--accent)">Telegram</a> for questions.</li>
+          </ul>
         </div>
         <div class="vp-copy">
           <p class="eyebrow">Why delegate here?</p>
@@ -296,22 +302,7 @@
   <div class="site" role="group" aria-label="More details">
     <!-- main two column area -->
     <div class="grid reveal">
-      <section class="card">
-        <h3>Validator overview</h3>
-        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
-          <div style="min-width:120px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px"><strong>Validator</strong><div class="muted">Amsterdam Sentinel</div></div>
-          <div style="min-width:120px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px"><strong>Chain</strong><div class="muted">Synternet</div></div>
-          <div style="min-width:140px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px"><strong>Commission</strong><div class="muted">0% until 20 Oct</div></div>
-        </div>
-
-        <p class="muted" style="margin-top:12px">Transparent performance metrics and uptime. Use the dashboard to verify missed blocks, slashing, peers and resource usage.</p>
-
-        <h4 style="margin-top:16px">Notes</h4>
-        <ul style="color:var(--muted)">
-          <li>Verify validator address before delegating.</li>
-          <li>Contact <a href="https://t.me/AmsterdamSentinel" target="_blank" style="color:var(--accent)">Telegram</a> for questions.</li>
-        </ul>
-      </section>
+      <!-- overview moved above -->
 
       <aside class="card">
         <h3>Quick links</h3>
