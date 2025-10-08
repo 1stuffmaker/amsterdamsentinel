@@ -94,14 +94,16 @@
   }
   /* new constrained version: add side breathing room (approx 1.5cm ≈ 56px each side on large screens) */
   .hero-wide{ 
-    --side-pad: clamp(16px, 2vw, 34px); /* maintain ~1–2cm margins */
-    width:100vw; margin:60px auto 60px; position:relative;
+    --side-pad: clamp(18px, 2.2vw, 42px);
+    width:100vw; margin:50px auto 50px; position:relative;
     max-width:100vw; padding-left:var(--side-pad); padding-right:var(--side-pad);
   }
-  .hero-wide:before{content:"";position:absolute;left:var(--side-pad);right:var(--side-pad);top:0;bottom:0;border-radius:24px;pointer-events:none;background:linear-gradient(120deg,rgba(88,166,255,0.4),rgba(45,212,191,0.35),rgba(88,166,255,0.4));opacity:.18;mix-blend-mode:overlay;animation:heroGlow 9s linear infinite;}
+  /* remove previous overlay glow */
+  .hero-wide:before{display:none}
   @keyframes heroGlow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
-  .hero-wide .hero-img{ width:100%;border-radius:24px; box-shadow:0 24px 70px -22px rgba(0,0,0,0.7); }
-  .hero-wide .hero-bar{position:absolute;left:calc(var(--side-pad) + 20px);bottom:20px;right:calc(var(--side-pad) + 20px);background:rgba(5,14,20,0.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;}
+  .hero-wide .hero-img{ width:100%;border-radius:24px; box-shadow:0 16px 46px -18px rgba(0,0,0,0.65); }
+  .hero-wide .hero-frame{padding:0;}
+  .hero-wide .hero-bar{position:absolute;left:calc(var(--side-pad) + 20px);bottom:20px;right:calc(var(--side-pad) + 20px);background:#0a1823;border:1px solid rgba(255,255,255,0.07);border-radius:12px;}
   @media (min-width:1400px){
     .hero-constrained{max-width:1600px;} /* allow wider on very large screens */
   }
@@ -110,8 +112,7 @@
   .hero-wide .float-node.fn2{width:14px;height:14px;animation-duration:16s;animation-delay:-4s;opacity:.65}
   .hero-wide .float-node.fn3{width:22px;height:22px;animation-duration:20s;animation-delay:-8s;opacity:.5}
   @keyframes nodeFloat{0%,100%{transform:translate3d(0,0,0)}25%{transform:translate3d(60px,-20px,0)}50%{transform:translate3d(20px,30px,0)}75%{transform:translate3d(-40px,10px,0)}}
-  .hero-wide .shimmer{position:absolute;left:var(--side-pad);right:var(--side-pad);top:0;bottom:0;border-radius:24px;overflow:hidden;pointer-events:none;}
-  .hero-wide .shimmer:before{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(75deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.18) 45%,rgba(255,255,255,0) 80%);animation:shimmer 7s linear infinite;mix-blend-mode:overlay}
+  .hero-wide .shimmer{display:none}
   @keyframes shimmer{0%{transform:translateX(0)}100%{transform:translateX(220%);}}
   @media (prefers-reduced-motion: reduce){.hero-wide .float-node,.hero-wide .shimmer:before{animation:none}}
 
@@ -288,12 +289,14 @@
   </div><!-- close .site early to allow full-width hero -->
 
     <!-- hero with screenshot preview (true wide) -->
-    <section class="hero hero-wide" aria-label="Grafana screenshot">
+  <section class="hero hero-wide" aria-label="Grafana screenshot">
       <div class="float-node fn1" style="top:14%;left:4%"></div>
       <div class="float-node fn2" style="bottom:18%;left:10%"></div>
       <div class="float-node fn3" style="top:30%;right:8%"></div>
       <div class="shimmer"></div>
-      <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
+      <div class="hero-frame" style="max-width:94.5vw;margin:0 auto;position:relative;">
+        <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
+      </div>
       <div class="hero-bar">
         <div class="muted">Live Grafana screenshot — near real-time</div>
         <div class="cta">
