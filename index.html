@@ -90,17 +90,17 @@
     border-radius:0; border-left:0; border-right:0;
   }
   /* new constrained version: add side breathing room (approx 1.5cm ≈ 56px each side on large screens) */
-  .hero-wide{ 
-    --side-pad: clamp(18px, 2.2vw, 42px);
-    width:100vw; margin:50px auto 50px; position:relative;
-    max-width:100vw; padding-left:var(--side-pad); padding-right:var(--side-pad);
-  }
-  /* remove previous overlay glow */
-  .hero-wide:before{display:none}
-  @keyframes heroGlow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
-  .hero-wide .hero-img{ width:100%;border-radius:24px; box-shadow:0 16px 46px -18px rgba(0,0,0,0.65); }
-  .hero-wide .hero-frame{padding:0;}
-  .hero-wide .hero-bar{position:absolute;left:calc(var(--side-pad) + 20px);bottom:20px;right:calc(var(--side-pad) + 20px);background:#0a1823;border:1px solid rgba(255,255,255,0.07);border-radius:12px;}
+  .hero-shell{--side-pad:clamp(18px,2.2vw,42px);width:100vw;max-width:100vw;margin:50px auto 60px;padding-left:var(--side-pad);padding-right:var(--side-pad);}
+  .hero-shell-inner{max-width:94.5vw;margin:0 auto;background:#0d2534;border:1px solid rgba(255,255,255,0.08);border-radius:26px;overflow:hidden;box-shadow:0 18px 48px -18px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.04) inset}
+  .hero-shot{background:#0b1e2a;padding:0;margin:0}
+  .hero-shell .hero-img{display:block;width:100%;height:auto;border:0;}
+  .hero-meta{display:flex;justify-content:space-between;gap:30px;align-items:center;padding:18px 24px;background:#0b1e2a;border-top:1px solid rgba(255,255,255,0.06);}
+  .hero-meta-left{display:flex;flex-direction:column;gap:4px}
+  .meta-title{font-size:15px;font-weight:600;color:#e1eef6}
+  .meta-updated{font-size:13px;color:var(--muted)}
+  .hero-meta-actions{display:flex;align-items:center;gap:12px}
+  @media (max-width:820px){.hero-meta{flex-direction:column;align-items:flex-start}.hero-meta-actions{width:100%}}
+  @media (max-width:560px){.hero-shell-inner{border-radius:20px}.hero-meta{padding:16px 18px}.meta-title{font-size:14px}}
   @media (min-width:1400px){
     .hero-constrained{max-width:1600px;} /* allow wider on very large screens */
   }
@@ -114,12 +114,7 @@
   .reveal.delay-3{transition-delay:.3s}
   @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
 
-  .hero-img{
-    width:100%; display:block; height:auto; object-fit:cover;
-  }
-  .hero-bar{
-    display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(180deg, rgba(2,8,12,0.35), rgba(2,8,12,0.25));
-  }
+  /* old hero bar styles removed */
   .muted{color:var(--muted)}
   .cta {display:flex;gap:10px;align-items:center}
 
@@ -278,16 +273,20 @@
 
   </div><!-- close .site early to allow full-width hero -->
 
-    <!-- hero with screenshot preview (true wide) -->
-    <section class="hero hero-wide" aria-label="Grafana screenshot">
-      <div class="hero-frame" style="max-width:94.5vw;margin:0 auto;position:relative;background:#091720;border-radius:24px;padding:0;">
-        <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
-      </div>
-      <div class="hero-bar">
-        <div class="muted">Live Grafana screenshot — near real-time</div>
-        <div class="cta">
-          <div class="muted" id="lastUpdated">Last updated —</div>
-          <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">Open Live Dashboard</a>
+    <!-- hero with screenshot preview (solid shell) -->
+    <section class="hero-shell" aria-label="Grafana dashboard screenshot">
+      <div class="hero-shell-inner">
+        <div class="hero-shot">
+          <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
+        </div>
+        <div class="hero-meta" role="group" aria-label="Grafana dashboard meta">
+          <div class="hero-meta-left">
+            <div class="meta-title">Live Grafana screenshot — near real-time</div>
+            <div class="meta-updated" id="lastUpdated">Last updated —</div>
+          </div>
+          <div class="hero-meta-actions">
+            <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">Open Live Dashboard</a>
+          </div>
         </div>
       </div>
     </section>
