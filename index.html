@@ -6,9 +6,6 @@
 <title>Amsterdam Sentinel — Validator</title>
 <meta name="description" content="Amsterdam Sentinel — Synternet validator. Live status, uptime and delegation links." />
 
-<!-- tsParticles CDN for particle network -->
-<script src="https://cdn.jsdelivr.net/npm/tsparticles-engine@3.4.4/tsparticles.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@3.4.4/tsparticles.slim.min.js" defer></script>
 
 <style>
   :root{
@@ -107,14 +104,7 @@
   @media (min-width:1400px){
     .hero-constrained{max-width:1600px;} /* allow wider on very large screens */
   }
-  /* hero floating nodes + shimmer */
-  .hero-wide .float-node{position:absolute;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#58a6ff,#2dd4bf);box-shadow:0 0 0 3px #06121a,0 0 18px 6px rgba(88,166,255,0.35);opacity:.8;animation:nodeFloat 12s ease-in-out infinite;}
-  .hero-wide .float-node.fn2{width:14px;height:14px;animation-duration:16s;animation-delay:-4s;opacity:.65}
-  .hero-wide .float-node.fn3{width:22px;height:22px;animation-duration:20s;animation-delay:-8s;opacity:.5}
-  @keyframes nodeFloat{0%,100%{transform:translate3d(0,0,0)}25%{transform:translate3d(60px,-20px,0)}50%{transform:translate3d(20px,30px,0)}75%{transform:translate3d(-40px,10px,0)}}
-  .hero-wide .shimmer{display:none}
-  @keyframes shimmer{0%{transform:translateX(0)}100%{transform:translateX(220%);}}
-  @media (prefers-reduced-motion: reduce){.hero-wide .float-node,.hero-wide .shimmer:before{animation:none}}
+  /* (floating nodes & shimmer removed) */
 
   /* scroll reveal base */
   .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.8,.3,1),transform 1s cubic-bezier(.2,.8,.3,1)}
@@ -289,12 +279,8 @@
   </div><!-- close .site early to allow full-width hero -->
 
     <!-- hero with screenshot preview (true wide) -->
-  <section class="hero hero-wide" aria-label="Grafana screenshot">
-      <div class="float-node fn1" style="top:14%;left:4%"></div>
-      <div class="float-node fn2" style="bottom:18%;left:10%"></div>
-      <div class="float-node fn3" style="top:30%;right:8%"></div>
-      <div class="shimmer"></div>
-      <div class="hero-frame" style="max-width:94.5vw;margin:0 auto;position:relative;">
+    <section class="hero hero-wide" aria-label="Grafana screenshot">
+      <div class="hero-frame" style="max-width:94.5vw;margin:0 auto;position:relative;background:#091720;border-radius:24px;padding:0;">
         <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
       </div>
       <div class="hero-bar">
@@ -349,50 +335,6 @@
   function updateTime(){ const el = document.getElementById('lastUpdated'); if(el) el.textContent = 'Last updated: ' + new Date().toLocaleString(); }
   updateTime(); setInterval(updateTime, 60_000);
 
-  /* ------ tsParticles init (particle network with links) ------ */
-  window.addEventListener('load', async () => {
-    // load slim which contains network/links support
-    if (window.tsParticles) {
-      tsParticles.load('bg', {
-        fpsLimit: 60,
-        background: { color: { value: 'transparent' } },
-        particles: {
-          number: { value: 70, density: { enable: true, area: 800 } },
-          color: { value: ['#58a6ff', '#2dd4bf'] },
-          shape: { type: 'circle' },
-          opacity: { value: 0.65 },
-          size: { value: { min: 1, max: 3 } },
-          move: {
-            enable: true,
-            speed: 0.9,
-            direction: 'none',
-            outModes: { default: 'bounce' },
-            attract: { enable: false }
-          },
-          links: {
-            enable: true,
-            distance: 160,
-            color: '#58a6ff',
-            opacity: 0.12,
-            width: 1
-          }
-        },
-        interactivity: {
-          detectsOn: 'canvas',
-          events: {
-            onHover: { enable: true, mode: 'grab' },
-            onClick: { enable: true, mode: 'push' },
-            resize: true
-          },
-          modes: {
-            grab: { distance: 160, links: { opacity: 0.25 } },
-            push: { quantity: 2 }
-          }
-        },
-        detectRetina: true
-      });
-    }
-  });
 
   /* ------ simple animated SVG "data stream" lines ------ */
   (function animateLines(){
