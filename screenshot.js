@@ -32,11 +32,18 @@ const puppeteer = require('puppeteer');
       console.log('Loading', t.url);
       await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
+
       // If panels lazy-load, you can add waits or interactions here
-  await new Promise(resolve => setTimeout(resolve, 2500));
+      await new Promise(resolve => setTimeout(resolve, 2500));
+
+      // Verberg de Grafana footer
+      await page.evaluate(() => {
+        const footer = document.querySelector('footer, .footer, .gf-footer');
+        if (footer) footer.style.display = 'none';
+      });
 
       const outPath = path.join(outDir, t.filename);
-  await page.screenshot({ path: outPath, fullPage: true });
+      await page.screenshot({ path: outPath, fullPage: true });
       console.log('Saved:', outPath);
 
       await page.close();
