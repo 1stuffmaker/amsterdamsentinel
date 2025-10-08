@@ -92,6 +92,20 @@
     margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw);
     border-radius:0; border-left:0; border-right:0;
   }
+  /* new constrained version: add side breathing room (approx 1.5cm ≈ 56px each side on large screens) */
+  .hero-constrained{ margin: 0 auto; width:100%; max-width:calc(var(--max-width) + 160px); padding:0 56px; }
+  .hero-constrained .hero-img{ border-radius: 10px 10px 0 0; }
+
+  /* metrics chip bar */
+  .metrics-bar{display:flex;flex-wrap:wrap;gap:14px;margin:10px auto 4px; padding:0 4px;}
+  .metric-chip{position:relative;display:flex;flex-direction:column;min-width:140px;padding:10px 14px;border-radius:14px;background:linear-gradient(145deg,#06121c,#071c2b);border:1px solid rgba(255,255,255,0.06);box-shadow:0 4px 20px -4px #02080c inset,0 6px 18px -8px rgba(0,0,0,0.6);overflow:hidden;font-size:13px;letter-spacing:.25px}
+  .metric-chip:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(88,166,255,0.18),rgba(45,212,191,0.15),rgba(88,166,255,0.18));background-size:220% 220%;animation: chipFlow 8s linear infinite;opacity:.35;mix-blend-mode:overlay;}
+  .metric-chip strong{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .metric-value{font-size:20px;font-weight:600;background:linear-gradient(90deg,#58a6ff,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.2;margin-top:2px}
+  .metric-delta{font-size:11px;margin-top:4px;color:#2dd4bf;display:flex;align-items:center;gap:3px;white-space:nowrap}
+  .metric-delta.neg{color:#ff6b6b}
+  @keyframes chipFlow{0%{background-position:0 50%}100%{background-position:200% 50%}}
+  @media (max-width:760px){.metric-chip{min-width:calc(50% - 7px);flex:1}}
   .hero-img{
     width:100%; display:block; height:auto; object-fit:cover;
   }
@@ -160,8 +174,17 @@
       </div>
     </header>
 
-    <!-- hero with screenshot preview (full-bleed) -->
-    <section class="hero full-bleed" aria-label="Grafana screenshot">
+    <!-- metric chips -->
+    <div class="metrics-bar" aria-label="Key validator metrics">
+      <div class="metric-chip" id="chip-uptime"><strong>Uptime (24h)</strong><div class="metric-value" data-static="99.9%">99.9%</div><div class="metric-delta" id="uptime-delta">+0.0%</div></div>
+      <div class="metric-chip" id="chip-commission"><strong>Commission</strong><div class="metric-value">0%</div><div class="metric-delta">Promo</div></div>
+      <div class="metric-chip" id="chip-blocks"><strong>Blocks Signed</strong><div class="metric-value" data-static="—" id="blocks-signed">—</div><div class="metric-delta" id="blocks-rate">loading</div></div>
+      <div class="metric-chip" id="chip-missed"><strong>Missed (24h)</strong><div class="metric-value" id="missed-count">0</div><div class="metric-delta neg" id="missed-delta">clean</div></div>
+      <div class="metric-chip" id="chip-voting"><strong>Voting Power</strong><div class="metric-value" id="voting-power">—</div><div class="metric-delta" id="voting-rank">rank —</div></div>
+    </div>
+
+    <!-- hero with screenshot preview (constrained) -->
+    <section class="hero hero-constrained" aria-label="Grafana screenshot">
       <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
       <div class="hero-bar">
         <div class="muted">Live Grafana screenshot — near real-time</div>
@@ -326,6 +349,24 @@
         if(lines) lines.style.transform = `translate3d(${(tx*0.8).toFixed(2)}px, ${(ty*0.8).toFixed(2)}px, 0)`;
       });
     });
+  })();
+
+  /* ------ mock dynamic metric updates (placeholder for real API) ------ */
+  (function metrics(){
+    const supports = typeof fetch === 'function';
+    const elBlocks = document.getElementById('blocks-signed');
+    const elRate = document.getElementById('blocks-rate');
+    let baseline = Date.now();
+    let blocks = 0;
+    function tick(){
+      // simple simulated increment; replace with chain RPC call
+      const elapsedMin = (Date.now() - baseline)/60000;
+      blocks = Math.floor(elapsedMin * 12); // pretend 12 blocks/min
+      if(elBlocks) elBlocks.textContent = blocks.toLocaleString();
+      if(elRate) elRate.textContent = '~' + (12).toString() + '/min';
+      requestAnimationFrame(()=>setTimeout(tick, 5000));
+    }
+    tick();
   })();
 </script>
 </body>
