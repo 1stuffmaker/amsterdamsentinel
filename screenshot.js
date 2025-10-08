@@ -37,9 +37,16 @@ const puppeteer = require('puppeteer');
       // Wacht langer zodat alles geladen is
       await new Promise(resolve => setTimeout(resolve, 5000));
 
-      // Maak een screenshot van de volledige pagina, footer blijft zichtbaar
+
+      // Screenshot alleen het dashboard-gedeelte
+      const dashboard = await page.$('.dashboard-container, .react-grid-layout, main');
       const outPath = path.join(outDir, t.filename);
-      await page.screenshot({ path: outPath, fullPage: true });
+      if (dashboard) {
+        await dashboard.screenshot({ path: outPath });
+      } else {
+        // fallback: hele pagina
+        await page.screenshot({ path: outPath, fullPage: true });
+      }
       console.log('Saved:', outPath);
 
       await page.close();
