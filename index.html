@@ -8,7 +8,6 @@
   <meta name="description" content="Amsterdam Sentinel — Synternet (Cosmos-based) validator. Uptime, performance and delegation info with live Grafana dashboard." />
   <meta property="og:title" content="Amsterdam Sentinel — Synternet Validator" />
   <meta property="og:description" content="Live validator status, metrics and delegation info." />
-  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect width='1200' height='630' fill='%23121212'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-size='48' fill='%2358a6ff'%3EAmsterdam Sentinel%3C/text%3E%3C/svg%3E" />
   <style>
     :root{
       --bg:#071014;
@@ -16,51 +15,87 @@
       --accent:#58a6ff;
       --muted:#93a1b0;
       --glass: rgba(255,255,255,0.03);
+      --max-content-width:1100px;
     }
+    /* Basic resets */
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:
-      linear-gradient(180deg, rgba(8,16,18,1) 0%, rgba(4,8,12,1) 100%); color:#e6eef3; -webkit-font-smoothing:antialiased;}
-    header{padding:32px 20px; text-align:center}
-    .brand{display:flex;gap:16px;align-items:center;justify-content:center}
-    .logo{
-      width:64px;height:64px;border-radius:12px;
-      background:linear-gradient(135deg,var(--accent),#2dd4bf);
-      display:flex;align-items:center;justify-content:center;color:#021018;font-weight:700;font-size:20px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.5)
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#08121a 0%, #04080c 100%);
+      color:#e6eef3;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden; /* prevent horizontal scroll when using 100vw */
     }
-    h1{margin:12px 0 0;font-size:28px;letter-spacing:-0.02em}
-    p.lead{margin:8px 0 0;color:var(--muted)}
-    .container{max-width:1100px;margin:28px auto;padding:0 20px}
-    .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
-    .card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(2,6,8,0.6)}
-    .card h3{margin:0 0 10px;font-size:16px;color:#dff3ff}
-    .flex-row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:#021018;font-weight:700;text-decoration:none;
-      box-shadow:0 8px 20px rgba(88,166,255,0.12)
-    }
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-    .small{font-size:13px;color:var(--muted)}
-    .status{
-      display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;background:var(--glass);
-      border:1px solid rgba(255,255,255,0.02)
-    }
-    .dot{width:12px;height:12px;border-radius:50%}
-    .dot.online{background:#2dd4bf}
-    .dot.offline{background:#ff7b72}
-    iframe.dashboard{
-      width:100%; height:640px; border:0; border-radius:10px; background:white; overflow:hidden;
-      box-shadow: 0 16px 40px rgba(2,6,8,0.6);
-    }
-    .meta{display:flex;flex-direction:column;gap:10px}
-    .links{display:flex;flex-direction:column;gap:8px}
-    .link-row{display:flex;align-items:center;gap:10px}
-    .icon{width:18px;height:18px;display:inline-block;vertical-align:middle}
-    footer{padding:20px;text-align:center;color:var(--muted);font-size:13px}
-    @media (max-width:920px){
-      .grid{grid-template-columns:1fr; padding-bottom:20px}
-      iframe.dashboard{height:520px}
-    }
+
+```
+/* Header / brand */
+header{padding:28px 18px;text-align:center}
+.brand{display:flex;gap:16px;align-items:center;justify-content:center}
+.logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2dd4bf);display:flex;align-items:center;justify-content:center;color:#021018;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(0,0,0,0.5)}
+h1{margin:8px 0 0;font-size:26px}
+p.lead{margin:6px 0 0;color:var(--muted)}
+
+/* Full-width hero image */
+.hero{
+  width:100%;
+  background:#071014;
+  display:block;
+  overflow:hidden;
+  position:relative;
+}
+.hero img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:none;   /* important: allow edge to edge */
+  margin:0;
+  padding:0;
+  border-radius:0;
+  box-shadow:none;
+}
+
+/* Footer bar below hero */
+.hero-bar{
+  width:100%;
+  background: #071014;
+  color:var(--muted);
+  display:flex;
+  justify-content:center;
+  padding:14px 18px;
+  gap:12px;
+  align-items:center;
+  box-sizing:border-box;
+  border-top:1px solid rgba(255,255,255,0.02);
+}
+.hero-bar .info{flex:1; text-align:left; max-width:calc(var(--max-content-width) - 200px); margin:0 auto;}
+.hero-bar .actions{display:flex;gap:10px;align-items:center}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--accent);color:#021018;font-weight:700;text-decoration:none;box-shadow:0 8px 20px rgba(88,166,255,0.12);
+}
+.small{font-size:13px;color:var(--muted)}
+
+/* Main content area */
+.container{max-width:var(--max-content-width);margin:28px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+.card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(2,6,8,0.6)}
+.card h3{margin:0 0 10px;font-size:16px;color:#dff3ff}
+.meta{display:flex;flex-direction:column;gap:10px}
+.links{display:flex;flex-direction:column;gap:8px}
+.link-row{display:flex;align-items:center;gap:10px}
+.icon{width:18px;height:18px;display:inline-block;vertical-align:middle}
+
+/* small screen adjustments */
+@media (max-width:920px){
+  .grid{grid-template-columns:1fr; padding-bottom:20px}
+  .hero-bar{flex-direction:column;align-items:stretch;gap:8px}
+  .hero-bar .info{text-align:center;max-width:none}
+  .hero-bar .actions{justify-content:center}
+}
+```
+
   </style>
 </head>
 <body>
@@ -74,84 +109,74 @@
     </div>
   </header>
 
-<div style="margin:0;padding:0;">
-  <div style="overflow:hidden;">
-    <!-- Full-width dashboard image -->
-    <img id="grafanaPreview"
-      src="/screenshots/dashboard_cropped.png"
-      alt="Dashboard preview"
-      style="display:block;width:100vw;height:auto;margin:0;padding:0;max-width:none;border-radius:0;box-shadow:none;"
-      onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1600&quot; height=&quot;900&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=%230b1620/><text x=&quot;50%25&quot; y=&quot;46%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial, Helvetica, sans-serif&quot; font-size=&quot;36&quot; fill=%2358a6ff>Grafana Dashboard Preview</text><text x=&quot;50%25&quot; y=&quot;56%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;18&quot; fill=%239aa6b2>Live dashboard opens in a new tab</text></svg>';">
+  <!-- HERO: full-width screenshot -->
 
-    <!-- Footer bar below image -->
-    <div style="padding:16px;background:#071014;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;width:100vw;box-sizing:border-box;">
-      <div style="color:#9aa6b2">Live Grafana dashboard — opens in a new tab</div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <a href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230"
-          target="_blank" rel="noopener noreferrer"
-          style="background:#58a6ff;color:#021018;font-weight:700;border-radius:10px;padding:10px 14px;text-decoration:none;box-shadow:0 8px 20px rgba(88,166,255,0.12);">
-          Open Live Dashboard
-        </a>
-        <div style="color:#9aa6b2;font-size:0.95rem">Last updated: <span id="lastUpdated">—</span></div>
-      </div>
+  <section class="hero" aria-label="Dashboard preview">
+    <!-- Make sure the file exists at /screenshots/dashboard_cropped.png -->
+    <img id="grafanaPreview"
+         src="/screenshots/dashboard_cropped.png"
+         alt="Grafana dashboard screenshot (Amsterdam Sentinel)"
+         onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1600&quot; height=&quot;900&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=%230b1620/><text x=&quot;50%25&quot; y=&quot;46%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial, Helvetica, sans-serif&quot; font-size=&quot;36&quot; fill=%2358a6ff>Grafana Dashboard Preview</text><text x=&quot;50%25&quot; y=&quot;56%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;18&quot; fill=%239aa6b2>Live dashboard opens in a new tab</text></svg>';">
+  </section>
+
+  <!-- HERO BAR with CTA -->
+
+  <div class="hero-bar">
+    <div class="info">
+      <div class="small">Live Grafana dashboard — opens in a new tab</div>
+    </div>
+    <div class="actions">
+      <div class="small">Last updated: <strong id="lastUpdated">—</strong></div>
+      <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank" rel="noopener noreferrer">Open Live Dashboard</a>
     </div>
   </div>
-</div>
 
+  <!-- Main content (centered container with grid: main content + sidebar) -->
 
+  <main class="container" role="main">
+    <div class="grid">
+      <!-- left column: main card (summary, info) -->
+      <section class="card" aria-labelledby="live-metrics">
+        <h3 id="live-metrics">Validator Overview</h3>
+        <div class="small" style="margin-bottom:12px">Information and quick stats for delegators.</div>
 
+```
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"><strong>Moniker</strong><div class="small">Amsterdam Sentinel</div></div>
+      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"><strong>Chain</strong><div class="small">Synternet (Cosmos)</div></div>
+      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"><strong>Commission</strong><div class="small">5%</div></div>
+    </div>
 
-  <!-- Sidebar -->
-  <aside class="card">
+    <p class="small">This site displays a recent screenshot of the Grafana dashboard. Click <em>Open Live Dashboard</em> to view interactive, live metrics on Grafana Cloud.</p>
+
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0">
+
+    <h3>Notes for delegators</h3>
+    <ul class="small" style="line-height:1.6">
+      <li>Always verify the validator address before delegating.</li>
+      <li>Contact via Telegram for questions or verification.</li>
+      <li>Site shows near-real-time screenshots updated automatically.</li>
+    </ul>
+  </section>
+
+  <!-- right column: sidebar -->
+  <aside class="card" aria-labelledby="quick-links">
     <div class="meta">
-      <div>
-        <h3>Validator Snapshot</h3>
-        <div class="small">Quick overview for delegators</div>
-        <div style="margin-top:12px;">
-          <div class="small"><strong>Moniker:</strong> Amsterdam Sentinel</div>
-          <div class="small"><strong>Chain:</strong> Synternet (Cosmos)</div>
-          <div class="small"><strong>Commission:</strong> 5%</div>
-          <div class="small"><strong>Uptime:</strong> 100%</div>
-        </div>
+      <h3 id="quick-links">Quick links</h3>
+      <div class="links">
+        <a class="link-row small" href="https://t.me/YOUR_TELEGRAM_HANDLE" target="_blank" rel="noopener">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M22 2L2 12l5 2 1 6 5-3 6 3 3-16z" fill="#58A6FF"/></svg>
+          Telegram
+        </a>
+        <a class="link-row small" href="#" target="_blank" rel="noopener">Validator Explorer</a>
+        <a class="link-row small" href="#" target="_blank" rel="noopener">How to Delegate</a>
       </div>
 
-      <div>
-        <h3>Quick links</h3>
-        <div class="links">
-          <!-- Telegram -->
-          <a class="link-row" href="https://t.me/YOUR_TELEGRAM_HANDLE" target="_blank" rel="noopener">
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M22 2L2 12l5 2 1 6 5-3 6 3 3-16z" fill="#58A6FF"/></svg>
-            <span class="small">Telegram</span>
-          </a>
+      <h3 style="margin-top:12px">Contact & Safe Delegation</h3>
+      <div class="small">- Always verify the validator address before delegating.<br>- Reach out on Telegram for questions.</div>
 
-          <!-- Explorer (replace URL with a relevant explorer link for the validator) -->
-          <a class="link-row" class="ghost" href="#" target="_blank" rel="noopener">
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" fill="#93A1B0"/></svg>
-            <span class="small">Validator Explorer</span>
-          </a>
-
-          <!-- Delegation guide -->
-          <a class="link-row" href="#" target="_blank" rel="noopener">
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="#93A1B0" stroke-width="1.2" stroke-linecap="round"/></svg>
-            <span class="small">How to Delegate</span>
-          </a>
-        </div>
-      </div>
-
-      <div>
-        <h3>Contact & Safe Delegation</h3>
-        <div class="small">
-          - Always verify the validator address before delegating.<br>
-          - Reach out on Telegram for questions or to get help.
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <a class="btn" href="https://t.me/YOUR_TELEGRAM_HANDLE" target="_blank" rel="noopener">
-            <!-- Telegram icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" style="vertical-align:middle"><path d="M22 2L2 12l5 2 1 6 5-3 6 3 3-16z" fill="#021018"/></svg>
-            Message
-          </a>
-          <a class="ghost" href="#" target="_blank" rel="noopener">Validator Details</a>
-        </div>
+      <div style="margin-top:12px">
+        <a class="btn" href="https://t.me/YOUR_TELEGRAM_HANDLE" target="_blank" rel="noopener">Message (Telegram)</a>
       </div>
 
       <div style="margin-top:12px" class="small">Powered by Grafana Cloud · Hosted on Cloudflare Pages</div>
@@ -160,24 +185,22 @@
 </div>
 ```
 
-  </div>
+  </main>
 
-  <footer>© <span id="year"></span> Amsterdam Sentinel — Run by a decentralised community</footer>
+  <footer style="padding:20px;text-align:center;color:var(--muted);font-size:13px">© <span id="year"></span> Amsterdam Sentinel — Run by a decentralised community</footer>
 
- <script>
-  // year (unchanged)
-  document.getElementById('year').textContent = new Date().getFullYear();
+  <script>
+    // Fill year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  // safe updateTime — checks for the element before setting
-  function updateTime(){
-    const el = document.getElementById('lastUpdated');
-    if (el) el.textContent = new Date().toLocaleString();
-  }
-  // call/update only if the element exists (safe guard)
-  updateTime();
-  setInterval(updateTime, 60_000);
-</script>
-
+    // Safe updateTime — checks for the element before setting
+    function updateTime(){
+      const el = document.getElementById('lastUpdated');
+      if (el) el.textContent = new Date().toLocaleString();
+    }
+    updateTime();
+    setInterval(updateTime, 60_000);
+  </script>
 
 </body>
 </html>
