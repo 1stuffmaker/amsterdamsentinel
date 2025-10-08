@@ -94,16 +94,35 @@
   }
   /* new constrained version: add side breathing room (approx 1.5cm ≈ 56px each side on large screens) */
   .hero-constrained{ 
-    --side-pad: clamp(14px, 2.2vw, 42px);
-    margin: 50px auto 30px; width:100%; 
-    max-width: calc(95vw - var(--side-pad)*2);
-    padding:0;
+    --side-pad: clamp(12px, 1.6vw, 34px); /* ~1–2cm on typical displays */
+    margin: 50px auto 40px; width:100%; 
+    max-width: calc(98vw - var(--side-pad)*2);
+    padding:0; position:relative;
   }
+  .hero-constrained:before{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;background:linear-gradient(120deg,rgba(88,166,255,0.4),rgba(45,212,191,0.35),rgba(88,166,255,0.4));opacity:.18;mix-blend-mode:overlay;animation:heroGlow 9s linear infinite;}
+  @keyframes heroGlow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
   .hero-constrained .hero-img{ border-radius: 18px; box-shadow:0 20px 60px -18px rgba(0,0,0,0.6); }
   .hero-constrained .hero-bar{border-radius:0 0 18px 18px;}
   @media (min-width:1400px){
     .hero-constrained{max-width:1600px;} /* allow wider on very large screens */
   }
+  /* hero floating nodes + shimmer */
+  .hero-constrained .float-node{position:absolute;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#58a6ff,#2dd4bf);box-shadow:0 0 0 3px #06121a,0 0 18px 6px rgba(88,166,255,0.35);opacity:.8;animation:nodeFloat 12s ease-in-out infinite;}
+  .hero-constrained .float-node.fn2{width:14px;height:14px;animation-duration:16s;animation-delay:-4s;opacity:.65}
+  .hero-constrained .float-node.fn3{width:22px;height:22px;animation-duration:20s;animation-delay:-8s;opacity:.5}
+  @keyframes nodeFloat{0%,100%{transform:translate3d(0,0,0)}25%{transform:translate3d(60px,-20px,0)}50%{transform:translate3d(20px,30px,0)}75%{transform:translate3d(-40px,10px,0)}}
+  .hero-constrained .shimmer{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;}
+  .hero-constrained .shimmer:before{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(75deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.18) 45%,rgba(255,255,255,0) 80%);animation:shimmer 7s linear infinite;mix-blend-mode:overlay}
+  @keyframes shimmer{0%{transform:translateX(0)}100%{transform:translateX(220%);}}
+  @media (prefers-reduced-motion: reduce){.hero-constrained .float-node,.hero-constrained .shimmer:before{animation:none}}
+
+  /* scroll reveal base */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.8,.3,1),transform 1s cubic-bezier(.2,.8,.3,1)}
+  .reveal.show{opacity:1;transform:translateY(0)}
+  .reveal.delay-1{transition-delay:.1s}
+  .reveal.delay-2{transition-delay:.2s}
+  .reveal.delay-3{transition-delay:.3s}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
 
   .hero-img{
     width:100%; display:block; height:auto; object-fit:cover;
@@ -208,18 +227,12 @@
       </div>
 
       <!-- small right-side action area -->
-      <div style="margin-left:auto;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-        <div style="display:flex;gap:8px">
-          <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">Open Dashboard</a>
-          <a class="btn ghost" href="https://restake.app/synternet/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux/stake" target="_blank">Delegate</a>
-        </div>
-        <div class="muted" style="font-size:13px">0% commission — promo until 20 Oct</div>
-      </div>
+      <!-- actions removed per request -->
     </header>
 
 
     <!-- value proposition section -->
-    <section class="value-prop" aria-labelledby="vp-title">
+  <section class="value-prop reveal" aria-labelledby="vp-title">
       <div class="vp-grid">
         <div class="vp-visual" aria-hidden="true">
           <div class="orb orb-a"></div>
@@ -244,27 +257,27 @@
     </section>
 
     <!-- benefits grid -->
-    <section class="benefits" aria-labelledby="benefits-title">
+  <section class="benefits reveal" aria-labelledby="benefits-title">
       <div class="benefits-inner">
         <p class="benefits-eyebrow">Why stake with us?</p>
         <h3 id="benefits-title">Operational excellence & community alignment.</h3>
         <div class="benefits-grid">
-          <div class="benefit">
+          <div class="benefit reveal delay-1">
             <div class="icon shield" aria-hidden="true"></div>
             <h4>Security</h4>
             <p>Hardened hosts, readonly keys, automated failover runbooks and continuous integrity checks.</p>
           </div>
-          <div class="benefit">
+          <div class="benefit reveal delay-2">
             <div class="icon fees" aria-hidden="true"></div>
             <h4>Low Fees</h4>
             <p>Introductory 0% then sustainable competitive commission to reinvest into tooling & monitoring.</p>
           </div>
-          <div class="benefit">
+          <div class="benefit reveal delay-3">
             <div class="icon community" aria-hidden="true"></div>
             <h4>Community</h4>
             <p>Responsive support and collaboration with ecosystem contributors. Feedback loops drive upgrades.</p>
           </div>
-            <div class="benefit">
+            <div class="benefit reveal delay-2">
             <div class="icon decentral" aria-hidden="true"></div>
             <h4>Decentralization</h4>
             <p>Provider and geographic spread to avoid correlated failure domains, improving network resilience.</p>
@@ -275,6 +288,10 @@
 
     <!-- hero with screenshot preview (constrained) -->
     <section class="hero hero-constrained" aria-label="Grafana screenshot">
+      <div class="float-node fn1" style="top:14%;left:4%"></div>
+      <div class="float-node fn2" style="bottom:18%;left:10%"></div>
+      <div class="float-node fn3" style="top:30%;right:8%"></div>
+      <div class="shimmer"></div>
       <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
       <div class="hero-bar">
         <div class="muted">Live Grafana screenshot — near real-time</div>
@@ -439,6 +456,22 @@
         if(lines) lines.style.transform = `translate3d(${(tx*0.8).toFixed(2)}px, ${(ty*0.8).toFixed(2)}px, 0)`;
       });
     });
+  })();
+
+  /* ------ scroll reveal ------ */
+  (function reveal(){
+    const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(noMotion) return; // already visible via CSS override
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('show');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.16});
+    els.forEach(el=>io.observe(el));
   })();
 
 </script>
