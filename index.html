@@ -1,193 +1,204 @@
 <!doctype html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Amsterdam Sentinel — Synternet Validator</title>
-  <meta name="description" content="Amsterdam Sentinel — Synternet (Cosmos-based) validator. Uptime, performance and delegation info with live Grafana dashboard." />
-  <meta property="og:title" content="Amsterdam Sentinel — Synternet Validator" />
-  <meta property="og:description" content="Live validator status, metrics and delegation info." />
+  <meta name="description" content="Amsterdam Sentinel — Synternet validator. Uptime, performance and delegation info with Grafana screenshots and links to delegate." />
   <style>
     :root{
-      --bg:#071014;
-      --card:#08161a;
+      --bg:#061017;
+      --card:#07161a;
       --accent:#58a6ff;
-      --muted:#93a1b0;
+      --accent-2:#2dd4bf;
+      --muted:#96a6b2;
       --glass: rgba(255,255,255,0.03);
-      --max-content-width:1100px;
+      --max-width:1100px;
+      --radius:12px;
     }
-    /* Basic resets */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
       font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#08121a 0%, #04080c 100%);
-      color:#e6eef3;
+      background:linear-gradient(180deg,#07121a 0%, #031016 100%);
+      color:#eaf4fb;
       -webkit-font-smoothing:antialiased;
-      overflow-x:hidden; /* prevent horizontal scroll when using 100vw */
+      overflow-x:hidden;
     }
 
-```
-/* Header / brand */
-header{padding:28px 18px;text-align:center}
-.brand{display:flex;gap:16px;align-items:center;justify-content:center}
-.logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#2dd4bf);display:flex;align-items:center;justify-content:center;color:#021018;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(0,0,0,0.5)}
-h1{margin:8px 0 0;font-size:26px}
-p.lead{margin:6px 0 0;color:var(--muted)}
+    /* Header */
+    header{
+      padding:24px 18px;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    .brand { display:flex; align-items:center; gap:16px; }
+    .avatar {
+      width:76px; height:76px; border-radius:14px; overflow:hidden; flex:0 0 76px;
+      box-shadow:0 10px 30px rgba(3,10,15,0.6);
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex; align-items:center; justify-content:center;
+    }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .title { text-align:left; }
+    .title h1{ margin:0; font-size:22px; letter-spacing:-0.01em; }
+    .title p{ margin:6px 0 0; color:var(--muted); font-size:14px; }
 
-/* Full-width hero image */
-.hero{
-  width:100%;
-  background:#071014;
-  display:block;
-  overflow:hidden;
-  position:relative;
-}
-.hero img{
-  display:block;
-  width:100%;
-  height:auto;
-  max-width:none;   /* important: allow edge to edge */
-  margin:0;
-  padding:0;
-  border-radius:0;
-  box-shadow:none;
-}
+    /* Promo badge */
+    .promo-row{ display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+    .badge {
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#012026; padding:8px 12px; border-radius:999px; font-weight:700;
+      box-shadow:0 8px 24px rgba(88,166,255,0.12); font-size:14px;
+    }
+    .promo-note{ color:var(--muted); font-size:13px; }
 
-/* Footer bar below hero */
-.hero-bar{
-  width:100%;
-  background: #071014;
-  color:var(--muted);
-  display:flex;
-  justify-content:center;
-  padding:14px 18px;
-  gap:12px;
-  align-items:center;
-  box-sizing:border-box;
-  border-top:1px solid rgba(255,255,255,0.02);
-}
-.hero-bar .info{flex:1; text-align:left; max-width:calc(var(--max-content-width) - 200px); margin:0 auto;}
-.hero-bar .actions{display:flex;gap:10px;align-items:center}
+    /* Full width hero */
+    .hero{ width:100%; display:block; overflow:hidden; background:#071014; }
+    .hero img{ display:block; width:100%; height:auto; max-width:none; margin:0; padding:0; }
 
-.btn{
-  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--accent);color:#021018;font-weight:700;text-decoration:none;box-shadow:0 8px 20px rgba(88,166,255,0.12);
-}
-.small{font-size:13px;color:var(--muted)}
+    /* Hero CTA bar */
+    .hero-bar{
+      width:100%;
+      background:#071014;
+      color:var(--muted);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:14px 18px;
+      gap:12px;
+      box-sizing:border-box;
+      border-top:1px solid rgba(255,255,255,0.02);
+    }
+    .hero-bar .center{ max-width:var(--max-width); width:100%; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .hero-bar .left{ color:var(--muted); }
+    .hero-bar .right{ display:flex; gap:10px; align-items:center; }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px;
+      background:var(--accent); color:#021018; font-weight:700; text-decoration:none;
+      box-shadow:0 8px 20px rgba(88,166,255,0.12);
+    }
+    .ghost{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted);
+      padding:8px 12px; border-radius:10px; text-decoration:none; }
 
-/* Main content area */
-.container{max-width:var(--max-content-width);margin:28px auto;padding:0 20px}
-.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
-.card{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(2,6,8,0.6)}
-.card h3{margin:0 0 10px;font-size:16px;color:#dff3ff}
-.meta{display:flex;flex-direction:column;gap:10px}
-.links{display:flex;flex-direction:column;gap:8px}
-.link-row{display:flex;align-items:center;gap:10px}
-.icon{width:18px;height:18px;display:inline-block;vertical-align:middle}
+    /* Main */
+    main{ max-width:var(--max-width); margin:28px auto; padding:0 18px; }
+    .grid{ display:grid; grid-template-columns:1fr 360px; gap:20px; align-items:start; }
+    .card{ background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:0 8px 30px rgba(2,6,8,0.6); }
+    .card h3{ margin:0 0 10px; font-size:16px; color:#dff3ff; }
+    .muted{ color:var(--muted); font-size:14px; }
 
-/* small screen adjustments */
-@media (max-width:920px){
-  .grid{grid-template-columns:1fr; padding-bottom:20px}
-  .hero-bar{flex-direction:column;align-items:stretch;gap:8px}
-  .hero-bar .info{text-align:center;max-width:none}
-  .hero-bar .actions{justify-content:center}
-}
-```
+    .stat-row{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+    .stat{ background:rgba(255,255,255,0.02); padding:10px; border-radius:10px; min-width:120px; text-align:center; }
 
+    .links a{ display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; text-decoration:none; color:inherit; }
+    .links a:hover{ background:rgba(255,255,255,0.02); }
+
+    footer{ padding:28px 18px; text-align:center; color:var(--muted); font-size:13px; margin-top:28px; }
+
+    @media (max-width:920px){
+      .grid{ grid-template-columns:1fr; padding-bottom:20px; }
+      header{ justify-content:center; text-align:center; }
+      .title{ text-align:center; }
+      .hero-bar .center{ flex-direction:column; align-items:stretch; gap:10px; }
+    }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <div class="brand">
-      <div class="logo">AS</div>
-      <div>
+      <div class="avatar" aria-hidden="true">
+        <!-- your uploaded validator image -->
+        <img src="/assets/validator.jpg" alt="Validator image">
+      </div>
+
+      <div class="title">
         <h1>Amsterdam Sentinel</h1>
-        <p class="lead">Synternet (Cosmos-based) Validator — secure, reliable, and transparent.</p>
+        <p>Validator — Synternet</p>
+
+        <div class="promo-row" aria-hidden="false">
+          <div class="badge">0% commission — promotion until 20 Oct</div>
+          <div class="promo-note">Zero commission to attract delegators (limited time)</div>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- HERO: full-width screenshot -->
-
-  <section class="hero" aria-label="Dashboard preview">
-    <!-- Make sure the file exists at /screenshots/dashboard_cropped.png -->
+  <!-- Full-width Grafana screenshot hero -->
+  <section class="hero" aria-label="Grafana screenshot">
+    <!-- ensure this file exists at /screenshots/dashboard_cropped.png -->
     <img id="grafanaPreview"
          src="/screenshots/dashboard_cropped.png"
          alt="Grafana dashboard screenshot (Amsterdam Sentinel)"
          onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1600&quot; height=&quot;900&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=%230b1620/><text x=&quot;50%25&quot; y=&quot;46%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial, Helvetica, sans-serif&quot; font-size=&quot;36&quot; fill=%2358a6ff>Grafana Dashboard Preview</text><text x=&quot;50%25&quot; y=&quot;56%25&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Arial&quot; font-size=&quot;18&quot; fill=%239aa6b2>Live dashboard opens in a new tab</text></svg>';">
   </section>
 
-  <!-- HERO BAR with CTA -->
-
-  <div class="hero-bar">
-    <div class="info">
-      <div class="small">Live Grafana dashboard — opens in a new tab</div>
-    </div>
-    <div class="actions">
-      <div class="small">Last updated: <strong id="lastUpdated">—</strong></div>
-      <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank" rel="noopener noreferrer">Open Live Dashboard</a>
+  <!-- Hero action bar -->
+  <div class="hero-bar" role="region" aria-label="Dashboard actions">
+    <div class="center">
+      <div class="left">Live Grafana screenshot — click to open the interactive dashboard</div>
+      <div class="right">
+        <div class="muted">Last updated: <strong id="lastUpdated">—</strong></div>
+        <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank" rel="noopener noreferrer">Open Live Dashboard</a>
+        <a class="ghost" href="https://restake.app/synternet/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux/stake" target="_blank" rel="noopener noreferrer">Delegate (REStake)</a>
+      </div>
     </div>
   </div>
 
-  <!-- Main content (centered container with grid: main content + sidebar) -->
-
-  <main class="container" role="main">
+  <!-- Main content -->
+  <main>
     <div class="grid">
-      <!-- left column: main card (summary, info) -->
-      <section class="card" aria-labelledby="live-metrics">
-        <h3 id="live-metrics">Validator Overview</h3>
-        <div class="small" style="margin-bottom:12px">Information and quick stats for delegators.</div>
+      <!-- left: overview -->
+      <section class="card" aria-labelledby="overview">
+        <h3 id="overview">Validator overview</h3>
 
-```
-    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
-      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"><strong>Moniker</strong><div class="small">Amsterdam Sentinel</div></div>
-      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"><strong>Chain</strong><div class="small">Synternet (Cosmos)</div></div>
-      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)"><strong>Commission</strong><div class="small">5%</div></div>
+        <div class="stat-row" role="list">
+          <div class="stat" role="listitem"><strong>Validator</strong><div class="muted">Amsterdam Sentinel</div></div>
+          <div class="stat" role="listitem"><strong>Chain</strong><div class="muted">Synternet</div></div>
+          <div class="stat" role="listitem"><strong>Commission</strong><div class="muted">0% until 20 Oct</div></div>
+        </div>
+
+        <p class="muted">This page shows a recent screenshot of the Grafana dashboard for transparency. Click <strong>Open Live Dashboard</strong> to view interactive metrics on Grafana Cloud.</p>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0">
+
+        <h3>Notes for delegators</h3>
+        <ul class="muted" style="line-height:1.6">
+          <li>Always verify the validator address before delegating.</li>
+          <li>0% commission promotion runs until 20 October — see the REStake link below for automatic restake staking.</li>
+          <li>Contact via Telegram for verification or questions.</li>
+        </ul>
+      </section>
+
+      <!-- right: quick links -->
+      <aside class="card" aria-labelledby="quicklinks">
+        <h3 id="quicklinks">Quick links</h3>
+        <div class="links">
+          <a href="https://restake.app/synternet/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux/stake" target="_blank" rel="noopener">🔁 REStake — Automatic restaking</a>
+          <a href="https://t.me/AmsterdamSentinel" target="_blank" rel="noopener">💬 Telegram</a>
+          <a href="https://explorer.synternet.com/validators/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux" target="_blank" rel="noopener">🔎 Validator Explorer</a>
+          <a href="https://staking.synternet.com/" target="_blank" rel="noopener">🪙 Synternet Staking</a>
+          <a href="https://staking.synternet.com/faq/" target="_blank" rel="noopener">❓ Staking FAQ</a>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" href="https://t.me/AmsterdamSentinel" target="_blank" rel="noopener">Message (Telegram)</a>
+          <a class="ghost" href="https://explorer.synternet.com/validators/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux" target="_blank" rel="noopener">Validator Details</a>
+        </div>
+
+        <!-- intentionally removed "Powered by Grafana Cloud · Hosted on Cloudflare Pages" per your request -->
+      </aside>
     </div>
-
-    <p class="small">This site displays a recent screenshot of the Grafana dashboard. Click <em>Open Live Dashboard</em> to view interactive, live metrics on Grafana Cloud.</p>
-
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0">
-
-    <h3>Notes for delegators</h3>
-    <ul class="small" style="line-height:1.6">
-      <li>Always verify the validator address before delegating.</li>
-      <li>Contact via Telegram for questions or verification.</li>
-      <li>Site shows near-real-time screenshots updated automatically.</li>
-    </ul>
-  </section>
-
-  <!-- right column: sidebar -->
-  <aside class="card" aria-labelledby="quick-links">
-    <div class="meta">
-      <h3 id="quick-links">Quick links</h3>
-      <div class="links">
-        <a class="link-row small" href="https://t.me/YOUR_TELEGRAM_HANDLE" target="_blank" rel="noopener">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M22 2L2 12l5 2 1 6 5-3 6 3 3-16z" fill="#58A6FF"/></svg>
-          Telegram
-        </a>
-        <a class="link-row small" href="#" target="_blank" rel="noopener">Validator Explorer</a>
-        <a class="link-row small" href="#" target="_blank" rel="noopener">How to Delegate</a>
-      </div>
-
-      <h3 style="margin-top:12px">Contact & Safe Delegation</h3>
-      <div class="small">- Always verify the validator address before delegating.<br>- Reach out on Telegram for questions.</div>
-
-      <div style="margin-top:12px">
-        <a class="btn" href="https://t.me/YOUR_TELEGRAM_HANDLE" target="_blank" rel="noopener">Message (Telegram)</a>
-      </div>
-
-      <div style="margin-top:12px" class="small">Powered by Grafana Cloud · Hosted on Cloudflare Pages</div>
-    </div>
-  </aside>
-</div>
-```
-
   </main>
 
-  <footer style="padding:20px;text-align:center;color:var(--muted);font-size:13px">© <span id="year"></span> Amsterdam Sentinel — Run by a decentralised community</footer>
+  <footer>
+    <div style="color:var(--muted);">© <span id="year"></span> Amsterdam Sentinel — Run by a decentralised community</div>
+  </footer>
 
   <script>
     // Fill year
@@ -201,6 +212,5 @@ p.lead{margin:6px 0 0;color:var(--muted)}
     updateTime();
     setInterval(updateTime, 60_000);
   </script>
-
 </body>
 </html>
