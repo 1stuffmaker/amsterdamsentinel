@@ -94,9 +94,9 @@
   }
   /* new constrained version: add side breathing room (approx 1.5cm ≈ 56px each side on large screens) */
   .hero-constrained{ 
-    --side-pad: clamp(28px, 4vw, 60px);
-    margin: 0 auto; width:100%; 
-    max-width: calc(100vw - var(--side-pad)*2);
+    --side-pad: clamp(14px, 2.2vw, 42px);
+    margin: 50px auto 30px; width:100%; 
+    max-width: calc(95vw - var(--side-pad)*2);
     padding:0;
   }
   .hero-constrained .hero-img{ border-radius: 18px; box-shadow:0 20px 60px -18px rgba(0,0,0,0.6); }
@@ -218,18 +218,6 @@
     </header>
 
 
-    <!-- hero with screenshot preview (constrained) -->
-    <section class="hero hero-constrained" aria-label="Grafana screenshot">
-      <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
-      <div class="hero-bar">
-        <div class="muted">Live Grafana screenshot — near real-time</div>
-        <div class="cta">
-          <div class="muted" id="lastUpdated">Last updated —</div>
-          <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">Open Live Dashboard</a>
-        </div>
-      </div>
-    </section>
-
     <!-- value proposition section -->
     <section class="value-prop" aria-labelledby="vp-title">
       <div class="vp-grid">
@@ -281,6 +269,18 @@
             <h4>Decentralization</h4>
             <p>Provider and geographic spread to avoid correlated failure domains, improving network resilience.</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- hero with screenshot preview (constrained) -->
+    <section class="hero hero-constrained" aria-label="Grafana screenshot">
+      <img class="hero-img" src="/screenshots/dashboard_cropped.png" alt="Grafana screenshot — Amsterdam Sentinel" />
+      <div class="hero-bar">
+        <div class="muted">Live Grafana screenshot — near real-time</div>
+        <div class="cta">
+          <div class="muted" id="lastUpdated">Last updated —</div>
+          <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">Open Live Dashboard</a>
         </div>
       </div>
     </section>
