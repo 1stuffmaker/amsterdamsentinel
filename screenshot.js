@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const sharp = require('sharp');
 
 (async () => {
   const outDir = path.join(process.cwd(), 'screenshots');
@@ -41,6 +42,7 @@ const puppeteer = require('puppeteer');
       // Screenshot van de volledige dashboard wrapper (dashboard + footer, geen extra zwart)
       const wrapper = await page.$('.css-1u1o2gi-page-wrapper');
       const outPath = path.join(outDir, t.filename);
+
       if (wrapper) {
         await wrapper.screenshot({ path: outPath });
       } else {
@@ -48,6 +50,13 @@ const puppeteer = require('puppeteer');
         await page.screenshot({ path: outPath, fullPage: true });
       }
       console.log('Saved:', outPath);
+
+      // Crop de screenshot tot een hoogte van 1200px
+      const croppedPath = outPath.replace('.png', '_cropped.png');
+      await sharp(outPath)
+        .extract({ left: 0, top: 0, width: 1920, height: 1200 })
+        .toFile(croppedPath);
+      console.log('Cropped:', croppedPath);
 
       await page.close();
     }
