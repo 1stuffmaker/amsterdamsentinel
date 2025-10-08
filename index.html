@@ -93,19 +93,18 @@
     border-radius:0; border-left:0; border-right:0;
   }
   /* new constrained version: add side breathing room (approx 1.5cm ≈ 56px each side on large screens) */
-  .hero-constrained{ margin: 0 auto; width:100%; max-width:calc(var(--max-width) + 160px); padding:0 56px; }
-  .hero-constrained .hero-img{ border-radius: 10px 10px 0 0; }
+  .hero-constrained{ 
+    --side-pad: clamp(28px, 4vw, 60px);
+    margin: 0 auto; width:100%; 
+    max-width: calc(100vw - var(--side-pad)*2);
+    padding:0;
+  }
+  .hero-constrained .hero-img{ border-radius: 18px; box-shadow:0 20px 60px -18px rgba(0,0,0,0.6); }
+  .hero-constrained .hero-bar{border-radius:0 0 18px 18px;}
+  @media (min-width:1400px){
+    .hero-constrained{max-width:1600px;} /* allow wider on very large screens */
+  }
 
-  /* metrics chip bar */
-  .metrics-bar{display:flex;flex-wrap:wrap;gap:14px;margin:10px auto 4px; padding:0 4px;}
-  .metric-chip{position:relative;display:flex;flex-direction:column;min-width:140px;padding:10px 14px;border-radius:14px;background:linear-gradient(145deg,#06121c,#071c2b);border:1px solid rgba(255,255,255,0.06);box-shadow:0 4px 20px -4px #02080c inset,0 6px 18px -8px rgba(0,0,0,0.6);overflow:hidden;font-size:13px;letter-spacing:.25px}
-  .metric-chip:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(88,166,255,0.18),rgba(45,212,191,0.15),rgba(88,166,255,0.18));background-size:220% 220%;animation: chipFlow 8s linear infinite;opacity:.35;mix-blend-mode:overlay;}
-  .metric-chip strong{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-  .metric-value{font-size:20px;font-weight:600;background:linear-gradient(90deg,#58a6ff,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.2;margin-top:2px}
-  .metric-delta{font-size:11px;margin-top:4px;color:#2dd4bf;display:flex;align-items:center;gap:3px;white-space:nowrap}
-  .metric-delta.neg{color:#ff6b6b}
-  @keyframes chipFlow{0%{background-position:0 50%}100%{background-position:200% 50%}}
-  @media (max-width:760px){.metric-chip{min-width:calc(50% - 7px);flex:1}}
   .hero-img{
     width:100%; display:block; height:auto; object-fit:cover;
   }
@@ -135,6 +134,50 @@
   @media (prefers-reduced-motion: reduce){
     .beams{ animation: none; }
   }
+
+  /* value proposition */
+  .value-prop{margin:70px 0 50px;position:relative;z-index:3}
+  .vp-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+  .vp-visual{position:relative;min-height:320px;border-radius:28px;background:radial-gradient(circle at 30% 30%,#0e2738,#071621 60%,#06111a);overflow:hidden;border:1px solid rgba(255,255,255,0.05);box-shadow:0 20px 60px -30px #01070c,0 0 0 1px rgba(255,255,255,0.02) inset}
+  .orb{position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(30px);opacity:.55;animation: float 14s ease-in-out infinite}
+  .orb-a{top:-30px;left:-40px;background:linear-gradient(135deg,#58a6ff,#2dd4bf)}
+  .orb-b{bottom:-60px;right:-40px;background:linear-gradient(135deg,#2dd4bf,#58a6ff);animation-duration:18s}
+  .mesh{position:absolute;inset:0;background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,0.08)0 2px,transparent 2px 6px),
+    radial-gradient(circle at 70% 80%,rgba(88,166,255,0.15),transparent 60%);
+    mix-blend-mode:overlay;opacity:.18}
+  @keyframes float{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(40px,30px,0)}}
+  .vp-copy .eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-2);margin:0 0 12px;font-weight:600}
+  .vp-copy h2{margin:0 0 18px;font-size:clamp(32px,4.2vw,52px);line-height:1.05;max-width:680px}
+  .grad{background:linear-gradient(90deg,#58a6ff,#2dd4bf 60%,#58a6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .vp-copy .lead{font-size:18px;max-width:640px;margin:0 0 22px;color:#d2dde5;line-height:1.4}
+  .vp-points{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:10px}
+  .vp-points li{position:relative;padding-left:24px;font-size:15px;color:var(--muted)}
+  .vp-points li:before{content:"";position:absolute;left:0;top:8px;width:10px;height:10px;border-radius:50%;background:linear-gradient(90deg,#58a6ff,#2dd4bf);box-shadow:0 0 8px #58a6ff88}
+  .vp-cta{display:flex;gap:14px;flex-wrap:wrap}
+  @media (max-width:1100px){.vp-grid{grid-template-columns:1fr;gap:46px}.vp-visual{order:2}.vp-copy{order:1}}
+  @media (max-width:640px){.value-prop{margin:60px 0 10px}.vp-copy h2{font-size:34px}}
+
+  /* benefits */
+  .benefits{margin:30px 0 60px;position:relative;z-index:3}
+  .benefits-inner{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+  .benefits-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--accent-2);margin:0 0 10px}
+  .benefits h3{margin:0 0 34px;font-size:30px;line-height:1.15;max-width:760px}
+  .benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px}
+  .benefit{position:relative;padding:26px 22px 24px;border:1px solid rgba(255,255,255,0.05);border-radius:20px;background:linear-gradient(160deg,#0a1822,#08131c 60%,#071019);box-shadow:0 8px 30px -12px rgba(0,0,0,0.7);overflow:hidden;transition:transform .6s cubic-bezier(.18,.8,.3,1),border-color .35s,box-shadow .5s}
+  .benefit:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 25% 15%,rgba(88,166,255,0.22),transparent 70%);opacity:.4;mix-blend-mode:overlay;transition:opacity .6s}
+  .benefit:hover{transform:translateY(-6px);border-color:rgba(88,166,255,0.45);box-shadow:0 14px 50px -10px rgba(0,20,35,0.9),0 0 0 1px rgba(88,166,255,0.25) inset}
+  .benefit:hover:before{opacity:.65}
+  .benefit h4{margin:16px 0 10px;font-size:18px}
+  .benefit p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+  .icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#10324a,#0b2433);box-shadow:0 0 0 1px rgba(255,255,255,0.05),0 6px 20px -8px rgba(0,0,0,0.9);position:relative}
+  .icon:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(120deg,#58a6ff,#2dd4bf);mix-blend-mode:overlay;opacity:.25}
+  .icon:before{content:"";width:22px;height:22px;background:linear-gradient(135deg,#58a6ff,#2dd4bf);border-radius:6px;box-shadow:0 0 0 2px #06111a inset,0 4px 12px -4px #58a6ff;}
+  .icon.shield:before{mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2l7 3v6c0 5.55-3.84 10.74-7 12-3.16-1.26-7-6.45-7-12V5l7-3z"/></svg>') center / contain no-repeat;}
+  .icon.fees:before{mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 7 12 3.16-1.26 7-6.45 7-12V5l-5-2.18V8h-2V1z"/></svg>') center / contain no-repeat;}
+  .icon.community:before{mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-3.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/></svg>') center / contain no-repeat;}
+  .icon.decentral:before{mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2l4 4-4 4-4-4 4-4zm6 6l4 4-4 4-4-4 4-4zM6 8l4 4-4 4-4-4 4-4zm6 6l4 4-4 4-4-4 4-4z"/></svg>') center / contain no-repeat;}
+  @media (max-width:640px){.benefits h3{font-size:26px;margin-bottom:28px}}
 </style>
 </head>
 <body>
@@ -174,14 +217,6 @@
       </div>
     </header>
 
-    <!-- metric chips -->
-    <div class="metrics-bar" aria-label="Key validator metrics">
-      <div class="metric-chip" id="chip-uptime"><strong>Uptime (24h)</strong><div class="metric-value" data-static="99.9%">99.9%</div><div class="metric-delta" id="uptime-delta">+0.0%</div></div>
-      <div class="metric-chip" id="chip-commission"><strong>Commission</strong><div class="metric-value">0%</div><div class="metric-delta">Promo</div></div>
-      <div class="metric-chip" id="chip-blocks"><strong>Blocks Signed</strong><div class="metric-value" data-static="—" id="blocks-signed">—</div><div class="metric-delta" id="blocks-rate">loading</div></div>
-      <div class="metric-chip" id="chip-missed"><strong>Missed (24h)</strong><div class="metric-value" id="missed-count">0</div><div class="metric-delta neg" id="missed-delta">clean</div></div>
-      <div class="metric-chip" id="chip-voting"><strong>Voting Power</strong><div class="metric-value" id="voting-power">—</div><div class="metric-delta" id="voting-rank">rank —</div></div>
-    </div>
 
     <!-- hero with screenshot preview (constrained) -->
     <section class="hero hero-constrained" aria-label="Grafana screenshot">
@@ -191,6 +226,61 @@
         <div class="cta">
           <div class="muted" id="lastUpdated">Last updated —</div>
           <a class="btn" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">Open Live Dashboard</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- value proposition section -->
+    <section class="value-prop" aria-labelledby="vp-title">
+      <div class="vp-grid">
+        <div class="vp-visual" aria-hidden="true">
+          <div class="orb orb-a"></div>
+          <div class="orb orb-b"></div>
+          <div class="mesh"></div>
+        </div>
+        <div class="vp-copy">
+          <p class="eyebrow">Why delegate here?</p>
+          <h2 id="vp-title">Purpose-built infrastructure for <span class="grad">Synternet data flow</span>.</h2>
+          <p class="lead">Amsterdam Sentinel blends bare‑metal performance, observability and rapid recovery automation so your stake compounds with minimal risk.</p>
+          <ul class="vp-points">
+            <li><span>Active double-sign protection & on-call rotation</span></li>
+            <li><span>Continuous performance tuning with live telemetry</span></li>
+            <li><span>Independent geographic & provider diversity (EU focus)</span></li>
+          </ul>
+          <div class="vp-cta">
+            <a class="btn" href="https://restake.app/synternet/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux/stake" target="_blank">Delegate Now</a>
+            <a class="btn ghost" href="https://t.me/AmsterdamSentinel" target="_blank">Chat / Questions</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- benefits grid -->
+    <section class="benefits" aria-labelledby="benefits-title">
+      <div class="benefits-inner">
+        <p class="benefits-eyebrow">Why stake with us?</p>
+        <h3 id="benefits-title">Operational excellence & community alignment.</h3>
+        <div class="benefits-grid">
+          <div class="benefit">
+            <div class="icon shield" aria-hidden="true"></div>
+            <h4>Security</h4>
+            <p>Hardened hosts, readonly keys, automated failover runbooks and continuous integrity checks.</p>
+          </div>
+          <div class="benefit">
+            <div class="icon fees" aria-hidden="true"></div>
+            <h4>Low Fees</h4>
+            <p>Introductory 0% then sustainable competitive commission to reinvest into tooling & monitoring.</p>
+          </div>
+          <div class="benefit">
+            <div class="icon community" aria-hidden="true"></div>
+            <h4>Community</h4>
+            <p>Responsive support and collaboration with ecosystem contributors. Feedback loops drive upgrades.</p>
+          </div>
+            <div class="benefit">
+            <div class="icon decentral" aria-hidden="true"></div>
+            <h4>Decentralization</h4>
+            <p>Provider and geographic spread to avoid correlated failure domains, improving network resilience.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -351,23 +441,6 @@
     });
   })();
 
-  /* ------ mock dynamic metric updates (placeholder for real API) ------ */
-  (function metrics(){
-    const supports = typeof fetch === 'function';
-    const elBlocks = document.getElementById('blocks-signed');
-    const elRate = document.getElementById('blocks-rate');
-    let baseline = Date.now();
-    let blocks = 0;
-    function tick(){
-      // simple simulated increment; replace with chain RPC call
-      const elapsedMin = (Date.now() - baseline)/60000;
-      blocks = Math.floor(elapsedMin * 12); // pretend 12 blocks/min
-      if(elBlocks) elBlocks.textContent = blocks.toLocaleString();
-      if(elRate) elRate.textContent = '~' + (12).toString() + '/min';
-      requestAnimationFrame(()=>setTimeout(tick, 5000));
-    }
-    tick();
-  })();
 </script>
 </body>
 </html>
