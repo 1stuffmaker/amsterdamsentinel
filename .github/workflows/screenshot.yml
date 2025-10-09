@@ -4,7 +4,8 @@ on:
   schedule:
     # runs every 15 minutes (cron uses UTC). Adjust as needed.
     - cron: '*/15 * * * *'
-  workflow_dispatch: # allow manual run from Actions tab
+  workflow_dispatch:
+  workflow_dispatch: {} # allow manual run from Actions tab
 
 jobs:
   capture:
@@ -29,10 +30,11 @@ jobs:
         env:
           CI: true
 
-      - name: Commit & force push screenshots
+  - name: Commit & force push screenshots
         shell: bash
         run: |
           set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
