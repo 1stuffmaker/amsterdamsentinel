@@ -141,13 +141,7 @@
   .nowrap{white-space:nowrap}
   @media (max-width:1100px){.links{grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch}}
   @media (max-width:640px){.links{grid-template-columns:1fr}}
-  /* enhanced quick links styling */
-  .links .link-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:background .25s,border-color .25s,transform .2s}
-  .links .link-item + .link-item{margin-top:8px}
-  .links .link-item:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);transform:translateY(-1px)}
-  .links .icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 18px;color:#9fcbd8}
-  .links .icon svg{width:18px;height:18px;display:block}
-  .links .label{line-height:1.2}
+  /* (verwijderd dubbele styling die uitlijning brak) */
 
   footer{color:var(--muted);font-size:13px;padding:40px 0;text-align:center}
 
@@ -161,13 +155,18 @@
 
   /* value proposition */
   .value-prop{margin:70px 0 50px;position:relative;z-index:3}
-  .vp-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+  .vp-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;grid-template-areas:"overview copy"}
+  .vp-overview{grid-area:overview}
+  .vp-copy{grid-area:copy}
   .vp-overview{background:linear-gradient(160deg,#0b1f2b,#091922);padding:30px 32px;border-radius:28px;border:1px solid rgba(255,255,255,0.05);box-shadow:0 18px 50px -24px rgba(0,0,0,0.7);position:relative;overflow:hidden}
   .overview-badges{display:flex;flex-wrap:wrap;gap:14px}
   .overview-badges .badge{background:rgba(255,255,255,0.04);padding:12px 16px;border-radius:14px;display:flex;flex-direction:column;min-width:150px;box-shadow:0 6px 18px -10px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.05)}
   .overview-badges .badge strong{font-size:11px;letter-spacing:1px;font-weight:600;text-transform:uppercase;color:var(--muted)}
   .overview-badges .badge span{font-size:15px;margin-top:4px}
-  @media (max-width:1100px){.vp-overview{order:1}.vp-copy{order:2}}
+  /* Op mobiel eerst de copy (Why delegate here) tonen, daarna de overview */
+  @media (max-width:1100px){
+    .vp-grid{grid-template-columns:1fr;gap:46px;grid-template-areas:"copy" "overview"}
+  }
   .vp-copy .eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-2);margin:0 0 12px;font-weight:600}
   .vp-copy h2{margin:0 0 18px;font-size:clamp(32px,4.2vw,52px);line-height:1.05;max-width:680px}
   .grad{background:linear-gradient(90deg,#58a6ff,#2dd4bf 60%,#58a6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -329,37 +328,45 @@
       <aside class="card">
         <h3>Quick links</h3>
         <div class="links" style="margin-top:8px">
-          <a class="link-item" href="https://t.me/AmsterdamSentinel" target="_blank">
-            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 12L22 2l-6 20-4-7-6-3 8-2 6-4-12 6z"/></svg></span>
-            <span class="label">Amsterdam Sentinel Telegram</span>
+          <!-- 1) Synternet Staking -->
+          <a class="link-item" href="https://staking.synternet.com/" target="_blank">
+            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 3c-4.4 0-8 1.8-8 4v10c0 2.2 3.6 4 8 4s8-1.8 8-4V7c0-2.2-3.6-4-8-4Zm0 2c3.2 0 6 .9 6 2s-2.8 2-6 2-6-.9-6-2 2.8-2 6-2Zm6 6c0 1.1-2.8 2-6 2s-6-.9-6-2V9c1.6 1 4 1.5 6 1.5s4.4-.5 6-1.5v2Z"/></svg></span>
+            <span class="label">Synternet Staking</span>
           </a>
-          <a class="link-item" href="https://t.me/Synternet" target="_blank">
-            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 12L22 2l-6 20-4-7-6-3 8-2 6-4-12 6z"/></svg></span>
-            <span class="label">Synternet Telegram</span>
-          </a>
-          <a class="link-item" href="https://twitter.com/synternet_com" target="_blank">
-            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.146 2H21L13.354 10.3L22 22h-6.154l-5.038-6.64L4.846 22H2l8.11-9.61L2 2h6.154l4.65 6.092L18.146 2z"/></svg></span>
-            <span class="label">Synternet X-account</span>
-          </a>
-          <a class="link-item" href="https://www.synternet.com/" target="_blank">
-            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2c2.2 0 4.1 1.6 5.4 4H6.6C7.9 5.6 9.8 4 12 4Zm-6.3 6h12.6c.2.6.3 1.3.3 2s-.1 1.4-.3 2H5.7A7.9 7.9 0 0 1 5.4 12c0-.7.1-1.4.3-2Zm.9 6h10.8c-1.3 2.4-3.2 4-5.4 4s-4.1-1.6-5.4-4Z"/></svg></span>
-            <span class="label">Synternet Website</span>
-          </a>
-          <a class="link-item" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">
-            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 13h4v7H4v-7Zm6-6h4v13h-4V7Zm6 3h4v10h-4V10Z"/></svg></span>
-            <span class="label">Monitoring Dashboard</span>
-          </a>
+          <!-- 2) REStake -->
           <a class="link-item" href="https://restake.app/synternet/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux/stake" target="_blank">
             <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 10 10h-2a8 8 0 1 1-2.3-5.6L15 9h7V2l-2.6 2.6A9.9 9.9 0 0 0 12 2Z"/></svg></span>
             <span class="label nowrap">REStake | Automatic restaking</span>
           </a>
+          <!-- 3) Validator Explorer -->
           <a class="link-item" href="https://explorer.synternet.com/validators/syntvaloper1egrl432asrtcu9t5m0z7cjndn29n4makatcqux" target="_blank">
             <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 1 0 5 14.3l4.9 4.9 1.4-1.4-4.9-4.9A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12A6 6 0 0 1 10 4Z"/></svg></span>
             <span class="label">Validator Explorer</span>
           </a>
-          <a class="link-item" href="https://staking.synternet.com/" target="_blank">
-            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 3c-4.4 0-8 1.8-8 4v10c0 2.2 3.6 4 8 4s8-1.8 8-4V7c0-2.2-3.6-4-8-4Zm0 2c3.2 0 6 .9 6 2s-2.8 2-6 2-6-.9-6-2 2.8-2 6-2Zm6 6c0 1.1-2.8 2-6 2s-6-.9-6-2V9c1.6 1 4 1.5 6 1.5s4.4-.5 6-1.5v2Z"/></svg></span>
-            <span class="label">Synternet Staking</span>
+          <!-- 4) Monitoring Dashboard -->
+          <a class="link-item" href="https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230" target="_blank">
+            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 13h4v7H4v-7Zm6-6h4v13h-4V7Zm6 3h4v10h-4V10Z"/></svg></span>
+            <span class="label">Monitoring Dashboard</span>
+          </a>
+          <!-- 5) Amsterdam Sentinel Telegram -->
+          <a class="link-item" href="https://t.me/AmsterdamSentinel" target="_blank">
+            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 12L22 2l-6 20-4-7-6-3 8-2 6-4-12 6z"/></svg></span>
+            <span class="label">Amsterdam Sentinel Telegram</span>
+          </a>
+          <!-- 6) Synternet Telegram -->
+          <a class="link-item" href="https://t.me/Synternet" target="_blank">
+            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M2 12L22 2l-6 20-4-7-6-3 8-2 6-4-12 6z"/></svg></span>
+            <span class="label">Synternet Telegram</span>
+          </a>
+          <!-- 7) Synternet X-account -->
+          <a class="link-item" href="https://twitter.com/synternet_com" target="_blank">
+            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.146 2H21L13.354 10.3L22 22h-6.154l-5.038-6.64L4.846 22H2l8.11-9.61L2 2h6.154l4.65 6.092L18.146 2z"/></svg></span>
+            <span class="label">Synternet X-account</span>
+          </a>
+          <!-- 8) Synternet Website -->
+          <a class="link-item" href="https://www.synternet.com/" target="_blank">
+            <span class="ql-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2c2.2 0 4.1 1.6 5.4 4H6.6C7.9 5.6 9.8 4 12 4Zm-6.3 6h12.6c.2.6.3 1.3.3 2s-.1 1.4-.3 2H5.7A7.9 7.9 0 0 1 5.4 12c0-.7.1-1.4.3-2Zm.9 6h10.8c-1.3 2.4-3.2 4-5.4 4s-4.1-1.6-5.4-4Z"/></svg></span>
+            <span class="label">Synternet Website</span>
           </a>
           <!-- Staking FAQ verwijderd op verzoek -->
         </div>
