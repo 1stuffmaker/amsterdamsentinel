@@ -4,7 +4,7 @@ on:
   schedule:
     # runs every 15 minutes (cron uses UTC). Adjust as needed.
     - cron: '*/15 * * * *'
-  workflow_dispatch:
+  workflow_dispatch: # allow manual run from Actions tab
 
 jobs:
   capture:
@@ -33,7 +33,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -46,4 +45,5 @@ jobs:
 
           git commit -m "Automated: update Grafana screenshots"
 
+          # Force push, geen rebase/merge
           git push origin HEAD:main --force
