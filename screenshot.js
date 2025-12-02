@@ -16,45 +16,121 @@ const sharp = require('sharp');
   ];
 
   const browser = await puppeteer.launch({
+    headless: 'new',
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--single-process'
+      // Removed flags that can cause blank/black canvas rendering in headless Chromium
+      '--enable-webgl',
+      '--enable-unsafe-webgpu',
+      '--ignore-certificate-errors',
+      '--hide-scrollbars'
     ]
   });
 
   try {
     for (const t of targets) {
-      const page = await browser.newPage();
-      await page.setViewport({ width: 1920, height: 2000 });
-      await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36');
-      console.log('Loading', t.url);
-      await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 });
+      // Allow per-target retries
+      const maxAttempts = t.retries || 2;
+      let attempt = 0;
+      let lastError = null;
+      const vp = t.viewport || { width: 1920, height: 1200 };
 
-      // Wacht langer zodat alles geladen is
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      // Try multiple attempts if the capture appears to be blank
+      while (attempt < maxAttempts) {
+        attempt++;
+        const page = await browser.newPage();
+        await page.setViewport(vp);
+        await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36');
+        console.log('Loading', t.url, '(attempt', attempt, 'of', maxAttempts + ')');
+        await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-      // Screenshot van de volledige dashboard wrapper (dashboard + footer, geen extra zwart)
-      const wrapper = await page.$('.css-1u1o2gi-page-wrapper');
-      const outPath = path.join(outDir, t.filename);
+        // Short wait so Grafana panels have time to paint
+        await new Promise(res => setTimeout(res, 3000 + (attempt - 1) * 2000));
 
-      if (wrapper) {
-        await wrapper.screenshot({ path: outPath });
-      } else {
-        // fallback: hele pagina
-        await page.screenshot({ path: outPath, fullPage: true });
+        // Wait for Grafana canvas elements or time out
+        try {
+          await page.waitForFunction(() => document.querySelectorAll('canvas').length > 0, { timeout: 15000 });
+          await new Promise(res => setTimeout(res, 1000));
+        } catch (e) {
+          // continue anyway
+        }
+
+        // Try a few possible dashboard wrapper selectors (Grafana markup can change)
+        const wrapperSelectors = [
+          '.css-1u1o2gi-page-wrapper',
+          '.dashboard-container',
+          '.gf-dashboard',
+          '[data-testid="dashboard-container"]'
+        ];
+        let wrapper = null;
+        for (const sel of wrapperSelectors) {
+          wrapper = await page.$(sel);
+          if (wrapper) break;
+        }
+
+        // Save debug HTML for inspection
+        try {
+          const html = await page.content();
+          fs.writeFileSync(path.join(outDir, `${t.filename.replace('.png', '')}_debug.html`), html);
+        } catch (e) {
+          console.warn('Failed writing debug HTML:', e.message || e);
+        }
+
+        const canvasCount = await page.evaluate(() => document.querySelectorAll('canvas').length);
+        console.log('Canvas elements found:', canvasCount, 'Wrapper selector found:', !!wrapper);
+
+        const outPath = path.join(outDir, t.filename);
+        if (wrapper) {
+          await wrapper.screenshot({ path: outPath });
+        } else {
+          await page.screenshot({ path: outPath, fullPage: true });
+        }
+        console.log('Saved:', outPath);
+
+        // Save a full-page debug screenshot as well
+        try {
+          await page.screenshot({ path: path.join(outDir, `${t.filename.replace('.png', '')}_debug_full.png`), fullPage: true });
+        } catch (e) {
+        }
+
+        // Crop the screenshot to a reasonable height (use the viewport width/height)
+        const croppedPath = outPath.replace('.png', '_cropped.png');
+        try {
+          const { width, height } = vp;
+          const cropHeight = Math.min(height, 1200);
+          await sharp(outPath)
+            .extract({ left: 0, top: 0, width: width, height: cropHeight })
+            .toFile(croppedPath);
+          console.log('Cropped:', croppedPath);
+        } catch (e) {
+          console.warn('Crop failed, leaving original:', e.message || e);
+        }
+
+        // Check whether the saved image is mostly black
+        let isMostlyBlack = false;
+        try {
+          const stats = await sharp(outPath).stats();
+          const mean = stats.channels.reduce((s, c) => s + (c.mean || 0), 0) / stats.channels.length;
+          console.log('Image mean luminance:', mean.toFixed(2));
+          if (mean < 10) isMostlyBlack = true;
+        } catch (e) {
+          console.warn('Failed to analyze image luminance:', e.message || e);
+        }
+
+        await page.close();
+
+        if (!isMostlyBlack) {
+          break; // good capture
+        }
+
+        lastError = new Error('Captured image is mostly black');
+        console.warn('Captured image is mostly black, retrying...');
+        await new Promise(res => setTimeout(res, 3000 * attempt));
       }
-      console.log('Saved:', outPath);
 
-      // Crop de screenshot tot een hoogte van 1200px
-      const croppedPath = outPath.replace('.png', '_cropped.png');
-      await sharp(outPath)
-        .extract({ left: 0, top: 0, width: 1920, height: 1200 })
-        .toFile(croppedPath);
-      console.log('Cropped:', croppedPath);
-
-      await page.close();
+      if (lastError) console.error('Final attempt issue for', t.url, lastError.message);
     }
   } catch (err) {
     console.error('Screenshot error', err);
