@@ -88,10 +88,16 @@ const sharp = require('sharp');
         await page.screenshot({ path: outPath, fullPage: true });
         console.log('Saved:', outPath);
 
-        // Save a full-page debug screenshot as well
+        // Crop the screenshot to a reasonable height (remove footer/powered by Grafana bar)
+        const croppedPath = outPath.replace('.png', '_cropped.png');
         try {
-          await page.screenshot({ path: path.join(outDir, `${t.filename.replace('.png', '')}_debug_full.png`), fullPage: true });
+          const cropHeight = 1200; // Crop to 1200px to exclude footer
+          await sharp(outPath)
+            .extract({ left: 0, top: 0, width: 1920, height: cropHeight })
+            .toFile(croppedPath);
+          console.log('Cropped:', croppedPath);
         } catch (e) {
+          console.warn('Crop failed, leaving original:', e.message || e);
         }
 
         // Check whether the saved image is mostly black
