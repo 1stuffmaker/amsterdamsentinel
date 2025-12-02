@@ -11,7 +11,7 @@ const sharp = require('sharp');
     {
       url: 'https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230',
       filename: 'dashboard.png',
-      viewport: { width: 1600, height: 900 }
+      viewport: { width: 1920, height: 2000 }
     },
   ];
 
@@ -41,7 +41,9 @@ const sharp = require('sharp');
       while (attempt < maxAttempts) {
         attempt++;
         const page = await browser.newPage();
-        await page.setViewport(vp);
+        // Always use a large fixed viewport to ensure we capture the full dashboard
+        const viewport = { width: 1920, height: 2000 };
+        await page.setViewport(viewport);
         await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36');
         console.log('Loading', t.url, '(attempt', attempt, 'of', maxAttempts + ')');
         await page.goto(t.url, { waitUntil: 'networkidle2', timeout: 60000 });
@@ -82,11 +84,8 @@ const sharp = require('sharp');
         console.log('Canvas elements found:', canvasCount, 'Wrapper selector found:', !!wrapper);
 
         const outPath = path.join(outDir, t.filename);
-        if (wrapper) {
-          await wrapper.screenshot({ path: outPath });
-        } else {
-          await page.screenshot({ path: outPath, fullPage: true });
-        }
+        // Always use fullPage: true to capture the entire scrollable content
+        await page.screenshot({ path: outPath, fullPage: true });
         console.log('Saved:', outPath);
 
         // Save a full-page debug screenshot as well
