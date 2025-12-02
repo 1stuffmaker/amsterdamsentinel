@@ -95,19 +95,6 @@ const sharp = require('sharp');
         } catch (e) {
         }
 
-        // Crop the screenshot to a reasonable height (use the viewport width/height)
-        const croppedPath = outPath.replace('.png', '_cropped.png');
-        try {
-          const { width, height } = vp;
-          const cropHeight = Math.min(height, 1200);
-          await sharp(outPath)
-            .extract({ left: 0, top: 0, width: width, height: cropHeight })
-            .toFile(croppedPath);
-          console.log('Cropped:', croppedPath);
-        } catch (e) {
-          console.warn('Crop failed, leaving original:', e.message || e);
-        }
-
         // Check whether the saved image is mostly black
         let isMostlyBlack = false;
         try {
