@@ -23,7 +23,6 @@ const sharp = require('sharp');
       '--disable-dev-shm-usage',
       // Removed flags that can cause blank/black canvas rendering in headless Chromium
       '--enable-webgl',
-      '--enable-unsafe-webgpu',
       '--ignore-certificate-errors',
       '--hide-scrollbars'
     ]
@@ -32,7 +31,7 @@ const sharp = require('sharp');
   try {
     for (const t of targets) {
       // Allow per-target retries
-      const maxAttempts = t.retries || 2;
+      const maxAttempts = t.retries || 5;
       let attempt = 0;
       let lastError = null;
       const vp = t.viewport || { width: 1920, height: 1200 };
@@ -83,24 +82,57 @@ const sharp = require('sharp');
         const canvasCount = await page.evaluate(() => document.querySelectorAll('canvas').length);
         console.log('Canvas elements found:', canvasCount, 'Wrapper selector found:', !!wrapper);
 
-        const outPath = path.join(outDir, t.filename);
-        // Always use fullPage: true to capture the entire scrollable content
-        await page.screenshot({ path: outPath, fullPage: true });
-        console.log('Saved:', outPath);
+        // Ensure we use the per-target viewport
+        await page.setViewport(vp);
 
-        // Crop the screenshot to a reasonable height (remove footer/powered by Grafana bar)
-        const croppedPath = outPath.replace('.png', '_cropped.png');
+        // Wait for at least one painted canvas (presence alone isn't enough)
         try {
-          const cropHeight = 1200; // Crop to 1200px to exclude footer
-          await sharp(outPath)
-            .extract({ left: 0, top: 0, width: 1920, height: cropHeight })
-            .toFile(croppedPath);
-          console.log('Cropped:', croppedPath);
+          await page.waitForFunction(() => {
+            const canvases = Array.from(document.querySelectorAll('canvas'));
+            if (canvases.length === 0) return false;
+            return canvases.some(c => {
+              try {
+                return c.toDataURL().length > 2000;
+              } catch (e) {
+                return false;
+              }
+            });
+          }, { timeout: 20000 });
+          await page.waitForTimeout(500);
         } catch (e) {
-          console.warn('Crop failed, leaving original:', e.message || e);
+          console.warn('Painted-canvas wait timed out; continuing (will rely on retry/luminance)');
         }
 
-        // Check whether the saved image is mostly black
+        const outPath = path.join(outDir, t.filename);
+        if (wrapper) {
+          console.log('Using wrapper.screenshot for', t.filename);
+          await wrapper.screenshot({ path: outPath });
+        } else {
+          console.log('Wrapper not found; using fullPage screenshot for', t.filename);
+          await page.screenshot({ path: outPath, fullPage: true });
+        }
+        console.log('Saved:', outPath);
+
+        // Save a debug full-page screenshot as well
+        try {
+          await page.screenshot({ path: path.join(outDir, `${t.filename.replace('.png', '')}_debug_full.png`), fullPage: true });
+        } catch (e) {
+        }
+
+        // Validate screenshot: ensure it's larger than threshold and not mostly black
+        const MIN_BYTES = 100 * 1024; // 100KB
+        let isTooSmall = false;
+        try {
+          const st = fs.statSync(outPath);
+          if (!st || st.size < MIN_BYTES) {
+            isTooSmall = true;
+            console.warn(`Saved file is too small (${st ? st.size : 'no stat'} bytes)`);
+          }
+        } catch (e) {
+          isTooSmall = true;
+          console.warn('Failed to stat screenshot file:', e.message || e);
+        }
+
         let isMostlyBlack = false;
         try {
           const stats = await sharp(outPath).stats();
@@ -112,6 +144,27 @@ const sharp = require('sharp');
         }
 
         await page.close();
+
+        if (!isTooSmall && !isMostlyBlack) {
+          // Good capture: crop and write the cropped version
+          const croppedPath = outPath.replace('.png', '_cropped.png');
+          try {
+            const width = (vp && vp.width) || 1920;
+            const cropHeight = Math.min((vp && vp.height) || 1200, 1200);
+            await sharp(outPath)
+              .extract({ left: 0, top: 0, width: width, height: cropHeight })
+              .toFile(croppedPath);
+            console.log('Cropped:', croppedPath);
+          } catch (e) {
+            console.warn('Crop failed, leaving original:', e.message || e);
+          }
+          break; // success
+        }
+
+        // Not acceptable: retry if we have attempts left
+        lastError = new Error(isTooSmall ? 'Captured image is too small' : 'Captured image is mostly black');
+        console.warn(lastError.message + ', retrying...');
+        await new Promise(res => setTimeout(res, 2000 * attempt));
 
         if (!isMostlyBlack) {
           break; // good capture
