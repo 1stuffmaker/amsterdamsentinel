@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload screenshots as artifact
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: grafana-screenshots
           path: screenshots/**
