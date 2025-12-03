@@ -44,6 +44,13 @@ jobs:
         env:
           CI: true
 
+      - name: Upload screenshots as artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: grafana-screenshots
+          path: screenshots/**
+
       - name: Commit & force push screenshots
         shell: bash
         run: |
