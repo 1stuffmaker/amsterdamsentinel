@@ -9,7 +9,7 @@ const sharp = require('sharp');
 
   const targets = [
     {
-      url: 'https://amsterdamsentinel.grafana.net/public-dashboards/d93f8182bbf84d9f89bca0d105e8e230',
+      url: 'https://amsterdamsentinel.grafana.net/public-dashboards/2296061b508b4a2697f5d8d9a2171549',
       filename: 'dashboard.png',
       viewport: { width: 1920, height: 2000 }
     },
